@@ -2,4 +2,6 @@
     <string name="app_name">vestband</string>
     <string name="login_login">LOG IN</string>
     <string name="login_register">REGISTER</string>
+    <string name="login_main_bot_register">회원가입</string>
+    <string name="login_main_bot_login">로그인</string>
 </resources>
