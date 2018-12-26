@@ -23,4 +23,5 @@
     <string name="register_birth">생년월일</string>
     <string name="register_birth_hint">생년월일 선택하기</string>
     <string name="register_agree">Spine up 회원 약관과 개인정보\n제공에 대해 동의합니다.</string>
+    <string name="register_done">회원가입</string>
 </resources>

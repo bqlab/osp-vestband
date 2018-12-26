@@ -212,13 +212,24 @@
     </LinearLayout>
 
     <CheckBox
+        android:id="@+id/register_agree"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:buttonTint="@color/colorBlack"
         android:layout_marginTop="10dp"
+        android:buttonTint="@color/colorBlack"
         android:text="@string/register_agree"
         android:textColor="@color/colorGray"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <Button
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/register_done"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/app_button_gray"
+        android:text="@string/register_done" />
 </LinearLayout>
