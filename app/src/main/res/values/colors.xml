@@ -3,4 +3,6 @@
     <color name="colorNavyBlue">#132735</color>
     <color name="colorBlue">#007aff</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorWhiteDark">#d9d9d9</color>
+    <color name="colorGray">#595959</color>
 </resources>

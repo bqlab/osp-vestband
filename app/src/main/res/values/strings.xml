@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">vestband</string>
+
     <string name="login_login">LOG IN</string>
     <string name="login_register">REGISTER</string>
     <string name="login_main_bot_register">회원가입</string>
     <string name="login_main_bot_login">로그인</string>
+    <string name="login_login_id">이메일</string>
+    <string name="login_login_id_hint">address@email.com</string>
+    <string name="login_login_pw">비밀번호</string>
+    <string name="login_login_pw_hint">비밀번호를 입력해 주세요</string>
+    <string name="login_login_find">비밀번호 찾기</string>
+    <string name="login_login_done">로그인</string>
 </resources>
