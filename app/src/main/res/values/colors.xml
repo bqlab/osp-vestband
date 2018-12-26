@@ -4,6 +4,7 @@
     <color name="colorBlue">#007aff</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhiteDark">#d9d9d9</color>
+    <color name="colorWhiteDarkBlue">#acb4be</color>
     <color name="colorGray">#595959</color>
     <color name="colorBlack">#000000</color>
 </resources>

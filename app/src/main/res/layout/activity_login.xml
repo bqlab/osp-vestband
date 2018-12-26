@@ -152,6 +152,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:background="@drawable/app_button_gray"
             android:text="@string/login_login_done"
             android:textColor="@color/colorWhite"

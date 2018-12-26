@@ -24,4 +24,8 @@
     <string name="register_birth_hint">생년월일 선택하기</string>
     <string name="register_agree">Spine up 회원 약관과 개인정보\n제공에 대해 동의합니다.</string>
     <string name="register_done">회원가입</string>
+    <string name="pwsearch_title">비밀번호를 잊으셨나요?</string>
+    <string name="pwsearch_text">가입시 사용한 이메일을 입력해 주세요.\n비밀번호 안내 메일을 발송합니다.</string>
+    <string name="pwsearch_email">이메일</string>
+    <string name="pwsearch_email_hint">address@email.com</string>
 </resources>

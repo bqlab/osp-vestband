@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="360dp"
+    android:layout_height="360dp"
+    android:background="@drawable/app_button_white"
+    tools:context=".PwsearchLayout">
+
+    <Button
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="15dp"
+        android:background="@drawable/pwsearch_close" />
+
+    <TextView
+        android:id="@+id/pwsearch_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/pwsearch_title"
+        android:textAlignment="center"
+        android:textColor="@color/colorBlue"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/pwsearch_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pwsearch_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="@string/pwsearch_text"
+        android:textAlignment="center"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/pwsearch_text"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/app_button_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="30dp"
+            android:text="@string/pwsearch_email"
+            android:textColor="@color/colorBlue"
+            android:textSize="18sp"
+            tools:ignore="RtlHardcoded" />
+
+        <EditText
+            android:id="@+id/pwsearch_hint"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:textColorHint="@color/colorWhiteDark"
+            android:hint="@string/pwsearch_email_hint"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/app_button_white" />
+    </LinearLayout>
+
+</RelativeLayout>
