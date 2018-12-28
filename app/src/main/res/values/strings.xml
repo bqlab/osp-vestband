@@ -28,4 +28,5 @@
     <string name="pwsearch_text">가입시 사용한 이메일을 입력해 주세요.\n비밀번호 안내 메일을 발송합니다.</string>
     <string name="pwsearch_email">이메일</string>
     <string name="pwsearch_email_hint">address@email.com</string>
+    <string name="pwsearch_send">전송</string>
 </resources>

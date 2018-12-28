@@ -62,15 +62,26 @@
 
         <EditText
             android:id="@+id/pwsearch_hint"
-            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"
-            android:textColorHint="@color/colorWhiteDark"
-            android:hint="@string/pwsearch_email_hint"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/app_button_white" />
+            android:background="@drawable/app_button_white"
+            android:hint="@string/pwsearch_email_hint"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@color/colorWhiteDark" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/pwsearch_send"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/app_button_gray"
+        android:layout_margin="15dp"
+        android:text="@string/pwsearch_send"
+        android:textSize="18sp" />
 
 </RelativeLayout>
