@@ -29,6 +29,9 @@
         <activity
             android:name=".InitialActivity"
             android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".DashboardActivity"
+            android:theme="@style/AppThemeNoActionBar"/>
     </application>
 
 </manifest>

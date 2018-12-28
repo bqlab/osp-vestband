@@ -110,6 +110,7 @@
 
             <Button
                 android:id="@+id/initial_first_button"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
@@ -213,6 +214,7 @@
 
             <Button
                 android:id="@+id/initial_second_button"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
@@ -313,6 +315,7 @@
 
             <Button
                 android:id="@+id/initial_third_button"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
@@ -413,6 +416,7 @@
 
             <Button
                 android:id="@+id/initial_fourth_button"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
@@ -453,10 +457,10 @@
             <NumberPicker
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:layout_marginStart="40dp"
-                android:divider="@color/colorWhiteDarkBlue"
-                android:layout_marginEnd="40dp"/>
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="40dp"
+                android:divider="@color/colorWhiteDarkBluish" />
         </LinearLayout>
 
         <LinearLayout
@@ -505,6 +509,7 @@
 
             <Button
                 android:id="@+id/initial_fifth_button"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
