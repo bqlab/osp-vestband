@@ -30,7 +30,7 @@
             android:name=".InitialActivity"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name=".DashboardActivity"
+            android:name=".MainActivity"
             android:theme="@style/AppThemeNoActionBar"/>
     </application>
 

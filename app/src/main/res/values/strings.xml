@@ -48,13 +48,13 @@
     <string name="initial_fifth_text">진동 알림을 받고 싶은 시간을 설정해 주세요</string>
     <string name="initial_fifth_button">다음</string>
 
-    <string name="dashboard_title">Today</string>
-    <string name="dashboard_chart_title">당신의 자세는</string>
-    <string name="dashboard_chart_no_data">No Data</string>
-    <string name="dashboard_total_title">총 착용시간</string>
-    <string name="dashboard_total_content">0시간 0분</string>
-    <string name="dashboard_vibrate_content">0회</string>
-    <string name="dashboard_vibrate_title">진동횟수</string>
-    <string name="dashboard_analisys_title">자세분석  ></string>
-    <string name="dashboard_stretch_title"><![CDATA[교정운동  >]]></string>
+    <string name="main_dashboard_title">Today</string>
+    <string name="main_dashboard_chart_title">당신의 자세는</string>
+    <string name="main_dashboard_chart_no_data">No Data</string>
+    <string name="main_dashboard_total_title">총 착용시간</string>
+    <string name="main_dashboard_total_content">0시간 0분</string>
+    <string name="main_dashboard_vibrate_content">0회</string>
+    <string name="main_dashboard_vibrate_title">진동횟수</string>
+    <string name="main_dashboard_analisys_title">자세분석  ></string>
+    <string name="main_dashboard_stretch_title">교정운동  ></string>
 </resources>
