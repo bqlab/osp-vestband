@@ -57,4 +57,14 @@
     <string name="main_dashboard_vibrate_title">진동횟수</string>
     <string name="main_dashboard_analisys_title">자세분석  ></string>
     <string name="main_dashboard_stretch_title">교정운동  ></string>
+    <string name="main_analisys_top_title">일일 자세 리포트</string>
+    <string name="main_analisys_top_date">2019&#8211;01&#8211;01 ~ 2019&#8211;01&#8211;01</string>
+    <string name="main_analisys_time_title">착용시간</string>
+    <string name="main_analisys_time_default">0번</string>
+    <string name="main_analisys_vibrate_default">0회</string>
+    <string name="main_analisys_vibrate_title">진동횟수</string>
+    <string name="main_analisys_right_title">바른 자세</string>
+    <string name="main_analisys_right_default">0분</string>
+    <string name="main_analisys_bad_default">0분</string>
+    <string name="main_analisys_bad_title">나쁜 자세</string>
 </resources>
