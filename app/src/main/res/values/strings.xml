@@ -76,4 +76,13 @@
     <string name="main_stretch_neck2">목운동_좌우 3분</string>
     <string name="main_stretch_back1">등배 운동_전후 3분</string>
     <string name="main_stretch_back2">옆구리운동_좌우 3분</string>
+    <string name="main_setting_top_title">나의 계정</string>
+    <string name="main_setting_top_connect_state_disconnected">연결 안됨</string>
+    <string name="main_setting_set_title">설정하기</string>
+    <string name="main_setting_set_notify">진동 알림 설정</string>
+    <string name="main_setting_set_posture">기준자세 등록</string>
+    <string name="main_setting_my_title">내 정보</string>
+    <string name="main_setting_my_profile">프로필</string>
+    <string name="main_setting_my_version">앱 버전</string>
+    <string name="main_setting_my_notice">공지사항</string>
 </resources>
