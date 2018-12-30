@@ -57,7 +57,6 @@
     <string name="main_dashboard_vibrate_title">진동횟수</string>
     <string name="main_dashboard_analisys_title">자세분석  ></string>
     <string name="main_dashboard_stretch_title">교정운동  ></string>
-
     <string name="main_analisys_top_title">일일 자세 리포트</string>
     <string name="main_analisys_top_date">2019&#8211;01&#8211;01 ~ 2019&#8211;01&#8211;01</string>
     <string name="main_analisys_time_title">착용시간</string>
@@ -68,7 +67,6 @@
     <string name="main_analisys_right_default">0분</string>
     <string name="main_analisys_bad_default">0분</string>
     <string name="main_analisys_bad_title">나쁜 자세</string>
-
     <string name="main_stretch_top_title">Spine Up과 운동하기</string>
     <string name="main_stretch_top_text">Spine Up과 함께 운동하세요</string>
     <string name="main_stretch_top_text2">회원님의 건강을 위해\n자세교정운동을 권해드립니다.</string>
@@ -85,4 +83,19 @@
     <string name="main_setting_my_profile">프로필</string>
     <string name="main_setting_my_version">앱 버전</string>
     <string name="main_setting_my_notice">공지사항</string>
+    <string name="main_setting_connect_top_title">Spine Up 연결상태</string>
+    <string name="main_setting_connect_title">나의 Spine Up 정보</string>
+    <string name="main_setting_connect_state_disconnected">연결 안됨</string>
+    <string name="main_setting_connect_state">상태</string>
+    <string name="main_setting_connect_battery">배터리</string>
+    <string name="main_setting_connect_battery_default">0%</string>
+    <string name="main_setting_connect_firmware">펌웨어 버전</string>
+    <string name="main_setting_connect_firmware_default">v0.0</string>
+    <string name="main_setting_notify_top_title">진동 알림 설정</string>
+    <string name="main_setting_notify_time_title">알림 시간 설정</string>
+    <string name="main_setting_notify_time_default">즉시 &gt;</string>
+    <string name="main_setting_notify_right">바른 자세 설정</string>
+    <string name="main_setting_notify_notify_right_default">0도</string>
+    <string name="main_setting_notify_bad_title">나쁜 자세 설정</string>
+    <string name="main_setting_notify_bad_default">15도</string>
 </resources>
