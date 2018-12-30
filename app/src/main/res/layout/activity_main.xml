@@ -1135,8 +1135,8 @@
             android:id="@+id/main_setting_notify"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -1230,11 +1230,11 @@
                             android:layout_marginTop="15dp"
                             android:layout_marginEnd="5dp"
                             android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/main_setting_notify_time_default"
                             android:textColor="@color/colorBlack"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:focusable="true" />
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
                     <ImageView
@@ -1270,11 +1270,11 @@
                             android:layout_marginTop="15dp"
                             android:layout_marginEnd="5dp"
                             android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/main_setting_notify_notify_right_default"
                             android:textColor="@color/colorBlack"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:focusable="true" />
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
                     <ImageView
@@ -1310,11 +1310,11 @@
                             android:layout_marginTop="15dp"
                             android:layout_marginEnd="5dp"
                             android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/main_setting_notify_bad_default"
                             android:textColor="@color/colorBlack"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:focusable="true" />
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
                     <ImageView
@@ -1347,9 +1347,9 @@
             <LinearLayout
                 android:id="@+id/main_setting_profile_top"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="90dp"
                 android:background="@color/colorNavy"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -1357,23 +1357,21 @@
                     android:layout_height="wrap_content">
 
                     <Button
-                        android:id="@+id/main_setting_notify_top_back"
+                        android:id="@+id/main_setting_profile_top_back"
                         android:layout_width="18dp"
                         android:layout_height="26dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="30dp"
-                        android:layout_marginTop="30dp"
                         android:background="@drawable/app_back_button" />
 
                     <TextView
-                        android:id="@+id/main_setting_notify_top_title"
+                        android:id="@+id/main_setting_profile_top_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@id/main_setting_notify_top_back"
+                        android:layout_alignBaseline="@id/main_setting_profile_top_back"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="30dp"
-                        android:text="@string/main_setting_notify_top_title"
+                        android:text="@string/main_setting_profile_top_title"
                         android:textAlignment="center"
                         android:textAllCaps="false"
                         android:textColor="@color/colorWhite"
@@ -1382,7 +1380,7 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <ScrollView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
@@ -1390,7 +1388,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:background="@color/colorWhite"
                     android:orientation="vertical">
 
@@ -1405,25 +1403,25 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="15dp"
-                            android:text="@string/main_setting_notify_time_title"
+                            android:text="@string/main_setting_profile_email"
                             android:textAllCaps="false"
                             android:textColor="@color/colorBlack"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/main_setting_notify_notify_time"
+                            android:id="@+id/main_setting_profile_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_marginTop="15dp"
                             android:layout_marginEnd="5dp"
                             android:clickable="true"
-                            android:text="@string/main_setting_notify_time_default"
-                            android:textColor="@color/colorBlack"
+                            android:focusable="true"
+                            android:text="@string/app_no_data"
+                            android:textColor="@color/colorWhiteDarkest"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:focusable="true" />
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
                     <ImageView
@@ -1445,25 +1443,25 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="15dp"
-                            android:text="@string/main_setting_notify_right"
+                            android:text="@string/main_setting_profile_name"
                             android:textAllCaps="false"
                             android:textColor="@color/colorBlack"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/main_setting_notify_notify_right"
+                            android:id="@+id/main_setting_profile_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_marginTop="15dp"
                             android:layout_marginEnd="5dp"
                             android:clickable="true"
-                            android:text="@string/main_setting_notify_notify_right_default"
-                            android:textColor="@color/colorBlack"
+                            android:focusable="true"
+                            android:text="@string/app_no_data"
+                            android:textColor="@color/colorWhiteDarkest"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:focusable="true" />
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
                     <ImageView
@@ -1485,25 +1483,105 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="15dp"
-                            android:text="@string/main_setting_notify_bad_title"
+                            android:text="@string/main_setting_profile_sex"
                             android:textAllCaps="false"
                             android:textColor="@color/colorBlack"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/main_setting_notify_notify_bad"
+                            android:id="@+id/main_setting_profile_sex"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_marginTop="15dp"
                             android:layout_marginEnd="5dp"
                             android:clickable="true"
-                            android:text="@string/main_setting_notify_bad_default"
-                            android:textColor="@color/colorBlack"
+                            android:focusable="true"
+                            android:text="@string/app_no_data"
+                            android:textColor="@color/colorWhiteDarkest"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:focusable="true" />
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/colorWhiteDark" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="15dp"
+                            android:text="@string/main_setting_profile_birth"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/main_setting_profile_birth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="5dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/app_no_data"
+                            android:textColor="@color/colorWhiteDarkest"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/colorWhiteDark" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="15dp"
+                            android:text="@string/main_setting_profile_register"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/main_setting_profile_register"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="5dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/app_no_data"
+                            android:textColor="@color/colorWhiteDarkest"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
                     <ImageView
@@ -1514,7 +1592,33 @@
                         android:layout_marginEnd="10dp"
                         android:background="@color/colorWhiteDark" />
                 </LinearLayout>
-            </ScrollView>
+
+                <Button
+                    android:id="@+id/main_setting_profile_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_above="@id/main_setting_profile_withdrawal"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/app_button_gray"
+                    android:text="@string/main_setting_profile_logout"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/main_setting_profile_withdrawal"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/app_button_gray"
+                    android:text="@string/main_setting_profile_withdrawal"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp" />
+            </RelativeLayout>
 
             <ImageView
                 android:layout_width="match_parent"
