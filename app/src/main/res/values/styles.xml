@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/colorNavy</item>
         <item name="colorPrimaryDark">@color/colorNavy</item>
         <item name="colorAccent">@color/colorBlue</item>
-        <item name="android:textColorPrimary">@color/colorWhite</item>
     </style>
 
     <style name="AppTheme.Launcher">
@@ -17,6 +16,5 @@
         <item name="colorPrimary">@color/colorNavy</item>
         <item name="colorPrimaryDark">@color/colorNavy</item>
         <item name="colorAccent">@color/colorBlue</item>
-        <item name="android:textColorPrimary">@color/colorWhite</item>
     </style>
 </resources>
