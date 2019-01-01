@@ -15,10 +15,19 @@ public class PwsearchLayout extends LinearLayout {
     public PwsearchLayout(Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.layout_pwsearch, this);
+        init();
+    }
+
+    private void init() {
         findViewById(R.id.pwsearch_close).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((FrameLayout) getParent()).removeView(PwsearchLayout.this);
+                FrameLayout p = ((FrameLayout) getParent());
+                p.removeView(PwsearchLayout.this);
+                for (int i = 0; i < p.getChildCount(); i++) {
+                    p.getChildAt(i).setClickable(true);
+                    p.getChildAt(i).setFocusable(true);
+                }
             }
         });
         findViewById(R.id.pwsearch_send).setOnClickListener(new OnClickListener() {

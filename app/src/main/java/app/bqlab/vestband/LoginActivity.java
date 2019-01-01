@@ -26,8 +26,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FrameLayout login = findViewById(R.id.login);
-                for (int i = 0; i < login.getChildCount(); i++)
-                    login.getChildAt(i).setEnabled(false);
+                for (int i = 0; i < login.getChildCount(); i++) {
+                    login.getChildAt(i).setClickable(false);
+                    login.getChildAt(i).setFocusable(false);
+                }
                 login.addView(new PwsearchLayout(LoginActivity.this));
             }
         });
