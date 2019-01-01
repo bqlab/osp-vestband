@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void init() {
+        ((EditText)findViewById(R.id.login_id)).setText(getIntent().getStringExtra("id"));
         findViewById(R.id.login_find).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String id = ((EditText) findViewById(R.id.login_id)).getText().toString();
                 String pw = ((EditText) findViewById(R.id.login_pw)).getText().toString();
-
                 if (!id.contains("@") || id.isEmpty() || pw.isEmpty()) {
                     new AlertDialog.Builder(LoginActivity.this)
                             .setMessage("아이디와 비밀번호를 다시 확인하세요.")
