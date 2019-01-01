@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 public class LoginActivity extends AppCompatActivity {
     @Override
@@ -22,7 +25,10 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.login_find).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //make pop-up
+                FrameLayout login = findViewById(R.id.login);
+                for (int i = 0; i < login.getChildCount(); i++)
+                    login.getChildAt(i).setEnabled(false);
+                login.addView(new PwsearchLayout(LoginActivity.this));
             }
         });
         findViewById(R.id.login_done).setOnClickListener(new View.OnClickListener() {
@@ -57,8 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }).show();
                     } else {
-                        if (getSharedPreferences("flag", MODE_PRIVATE).getBoolean("beginner", true)) {
-                            getSharedPreferences("flag", MODE_PRIVATE).edit().putBoolean("beginner", false).apply();
+                        if (getSharedPreferences("flag", MODE_PRIVATE).getBoolean("first", true)) {
+                            getSharedPreferences("flag", MODE_PRIVATE).edit().putBoolean("first", false).apply();
                             startActivity(new Intent(LoginActivity.this, InitialActivity.class));
                         }
                     }
