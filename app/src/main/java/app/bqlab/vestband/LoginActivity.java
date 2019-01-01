@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
     @Override
@@ -57,18 +58,13 @@ public class LoginActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
-                                })
-                                .setNeutralButton("회원가입", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                                    }
                                 }).show();
                     } else {
                         if (getSharedPreferences("flag", MODE_PRIVATE).getBoolean("first", true)) {
                             getSharedPreferences("flag", MODE_PRIVATE).edit().putBoolean("first", false).apply();
                             startActivity(new Intent(LoginActivity.this, InitialActivity.class));
-                        }
+                        } else
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     }
                 }
             }
