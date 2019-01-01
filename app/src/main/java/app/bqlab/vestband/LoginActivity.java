@@ -61,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                                 }).show();
                     } else {
                         if (getSharedPreferences("flag", MODE_PRIVATE).getBoolean("first", true)) {
-                            getSharedPreferences("flag", MODE_PRIVATE).edit().putBoolean("first", false).apply();
                             startActivity(new Intent(LoginActivity.this, InitialActivity.class));
                         } else
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
