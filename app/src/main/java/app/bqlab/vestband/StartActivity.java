@@ -15,6 +15,12 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void init() {
+        findViewById(R.id.start_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StartActivity.this, InitialActivity.class));
+            }
+        });
         findViewById(R.id.start_register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

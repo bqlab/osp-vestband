@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
     @Override
@@ -19,10 +23,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void init() {
+        ((EditText)findViewById(R.id.login_id)).setText(getIntent().getStringExtra("id"));
         findViewById(R.id.login_find).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //make pop-up
+                FrameLayout login = findViewById(R.id.login);
+                for (int i = 0; i < login.getChildCount(); i++) {
+                    login.getChildAt(i).setClickable(false);
+                    login.getChildAt(i).setFocusable(false);
+                }
+                login.addView(new PwsearchLayout(LoginActivity.this));
             }
         });
         findViewById(R.id.login_done).setOnClickListener(new View.OnClickListener() {
@@ -30,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String id = ((EditText) findViewById(R.id.login_id)).getText().toString();
                 String pw = ((EditText) findViewById(R.id.login_pw)).getText().toString();
-
                 if (!id.contains("@") || id.isEmpty() || pw.isEmpty()) {
                     new AlertDialog.Builder(LoginActivity.this)
                             .setMessage("아이디와 비밀번호를 다시 확인하세요.")
@@ -49,18 +58,12 @@ public class LoginActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
-                                })
-                                .setNeutralButton("회원가입", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                                    }
                                 }).show();
                     } else {
-                        if (getSharedPreferences("flag", MODE_PRIVATE).getBoolean("beginner", true)) {
-                            getSharedPreferences("flag", MODE_PRIVATE).edit().putBoolean("beginner", false).apply();
+                        if (getSharedPreferences("flag", MODE_PRIVATE).getBoolean("first", true)) {
                             startActivity(new Intent(LoginActivity.this, InitialActivity.class));
-                        }
+                        } else
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     }
                 }
             }

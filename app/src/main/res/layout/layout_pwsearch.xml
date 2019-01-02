@@ -2,12 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="360dp"
+    android:layout_width="match_parent"
     android:layout_height="360dp"
+    android:layout_gravity="center"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
     android:background="@drawable/app_button_white"
     tools:context=".PwsearchLayout">
 
     <Button
+        android:id="@+id/pwsearch_close"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignParentStart="true"
@@ -51,7 +55,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="125dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
             android:paddingRight="30dp"
@@ -61,13 +65,10 @@
             tools:ignore="RtlHardcoded" />
 
         <EditText
-            android:id="@+id/pwsearch_hint"
+            android:id="@+id/pwsearch_email"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/app_button_white"
+            android:layout_height="wrap_content"
+            android:background="@null"
             android:hint="@string/pwsearch_email_hint"
             android:inputType="textEmailAddress"
             android:textColorHint="@color/colorWhiteDark" />
@@ -75,13 +76,16 @@
 
     <Button
         android:id="@+id/pwsearch_send"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/app_button_gray"
         android:layout_margin="15dp"
+        android:background="@drawable/app_button_gray"
+        android:focusable="true"
         android:text="@string/pwsearch_send"
+        android:textColor="@color/colorWhite"
         android:textSize="18sp" />
 
 </RelativeLayout>

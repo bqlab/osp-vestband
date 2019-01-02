@@ -12,6 +12,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/app_wordmark" />
 
     <LinearLayout
@@ -34,11 +35,12 @@
 
         <EditText
             android:id="@+id/register_id"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
             android:hint="@string/register_id_hint"
             android:imeOptions="actionDone"
+            android:singleLine="true"
             android:textColorHint="@color/colorWhiteDark"
             android:textSize="18sp" />
     </LinearLayout>
@@ -64,11 +66,12 @@
 
         <EditText
             android:id="@+id/register_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
             android:hint="@string/register_name_hint"
             android:imeOptions="actionDone"
+            android:singleLine="true"
             android:textColorHint="@color/colorWhiteDark"
             android:textSize="18sp" />
     </LinearLayout>
@@ -95,11 +98,13 @@
 
         <EditText
             android:id="@+id/register_pw"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
             android:hint="@string/register_pw_hint"
             android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:singleLine="true"
             android:textColorHint="@color/colorWhiteDark"
             android:textSize="18sp" />
     </LinearLayout>
@@ -124,12 +129,14 @@
             tools:ignore="RtlHardcoded" />
 
         <EditText
-            android:id="@+id/register_check"
-            android:layout_width="wrap_content"
+            android:id="@+id/register_pw2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:hint="@string/register_check_hint"
+            android:hint="@string/register_pw2_hint"
             android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:singleLine="true"
             android:textColorHint="@color/colorWhiteDark"
             android:textSize="18sp" />
     </LinearLayout>
@@ -191,7 +198,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
+            <TextView
+                android:id="@+id/register_birth_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -201,7 +209,7 @@
                 android:textColorHint="@color/colorWhiteDark"
                 android:textSize="18sp" />
 
-            <Button
+            <ImageView
                 android:layout_width="35dp"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
@@ -231,8 +239,9 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/app_button_gray"
-        android:text="@string/register_done" />
+        android:text="@string/register_done"
+        android:textColor="@color/colorWhite" />
 </LinearLayout>
