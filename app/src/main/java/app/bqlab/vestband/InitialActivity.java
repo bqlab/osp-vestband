@@ -1,9 +1,11 @@
 package app.bqlab.vestband;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +20,16 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+import app.akexorcist.bluetotohspp.library.BluetoothState;
+import app.akexorcist.bluetotohspp.library.DeviceList;
+
 public class InitialActivity extends AppCompatActivity {
 
     final int REQUEST_ENABLE_BLUETOOTH = 0;
     boolean isConnected = false;
-    BluetoothAdapter bluetoothAdapter;
+    String id;
+    BluetoothSPP bluetoothSPP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,7 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void firstProgress() {
+        id = getIntent().getStringExtra("id");
         findViewById(R.id.initial_first).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -95,85 +103,62 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third).setVisibility(View.GONE);
         findViewById(R.id.initial_fourth).setVisibility(View.GONE);
         findViewById(R.id.initial_fifth).setVisibility(View.GONE);
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
+        bluetoothSPP = new BluetoothSPP(this);
+        if (!bluetoothSPP.isBluetoothAvailable()) {
             Toast.makeText(InitialActivity.this, "지원하지 않는 기기입니다.", Toast.LENGTH_LONG).show();
             finishAffinity();
-        } else if (!bluetoothAdapter.isEnabled())
+        } else if (!bluetoothSPP.isBluetoothEnabled()) {
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BLUETOOTH);
-        else if (!isConnected) {
-            Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-            if (!pairedDevices.isEmpty()) {
-                for (BluetoothDevice device : pairedDevices) {
-                    if (device.getName().equals("Spine Up")) {
-                        new ConnectThread(device).run();
-                    }
+        } else if (!bluetoothSPP.isServiceAvailable()) {
+            bluetoothSPP.setupService();
+            bluetoothSPP.startService(BluetoothState.DEVICE_OTHER);
+            secondProgress();
+        } else if (!isConnected) {
+            bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+                @Override
+                public void onDeviceConnected(String name, String address) {
+                    isConnected = true;
+                    getSharedPreferences("deviceName", MODE_PRIVATE).edit().putString(id, name).apply();
+                    getSharedPreferences("deviceAddress", MODE_PRIVATE).edit().putString(id, address).apply();
+                    Toast.makeText(InitialActivity.this, "디바이스가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                    thirdProgress();
                 }
-            }
+
+                @Override
+                public void onDeviceDisconnected() {
+                    isConnected = false;
+                    Toast.makeText(InitialActivity.this, "디바이스와의 연결이 끊겼습니다.", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onDeviceConnectionFailed() {
+                    Toast.makeText(InitialActivity.this, "디바이스를 등록할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            final DeviceList deviceList = new DeviceList();
+            new AlertDialog.Builder(InitialActivity.this)
+                    .setTitle("디바이스를 선택하세요.")
+                    .setView(findViewById(R.id.list_devices))
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("스캔", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         }
+    }
+
+    private void thirdProgress() {
+
     }
 
     private void fifthProgress() {
         getSharedPreferences("flag", MODE_PRIVATE).edit().putBoolean("first", false).apply();
-    }
-
-    private class ConnectThread extends Thread {
-        private BluetoothSocket socket;
-        private BluetoothDevice device;
-        public ConnectThread(BluetoothDevice device) {
-            try {
-                this.device = device;
-                this.socket = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        public void run() {
-            try {
-                socket.connect();
-                
-            } catch (IOException e) {
-                try {
-                    socket.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private class ConnectedThread extends Thread {
-        InputStream inputStream;
-        OutputStream outputStream;
-        public ConnectedThread(BluetoothSocket socket, String socketType) {
-            try {
-                inputStream = socket.getInputStream();
-                outputStream = socket.getOutputStream();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes;
-            while(true) {
-                try {
-                    bytes = inputStream.read(buffer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    break;
-                }
-            }
-        }
-
-        public void write(byte[] buffer) {
-            try {
-                outputStream.write(buffer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
