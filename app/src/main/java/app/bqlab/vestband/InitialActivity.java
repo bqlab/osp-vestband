@@ -148,8 +148,10 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isConnected)
+                if (isConnected) {
+                    bluetoothSPP.stopService();
                     thirdProgress();
+                }
             }
         });
         bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
@@ -193,8 +195,15 @@ public class InitialActivity extends AppCompatActivity {
             }
         });
         if (!bluetoothSPP.isBluetoothAvailable()) {
-            Toast.makeText(InitialActivity.this, "지원하지 않는 기기입니다.", Toast.LENGTH_LONG).show();
-            finishAffinity();
+            new AlertDialog.Builder(InitialActivity.this)
+                    .setMessage("지원하지 않는 기기입니다.")
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finishAffinity();
+                        }
+                    }).show();
         } else if (!bluetoothSPP.isBluetoothEnabled()) {
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BLUETOOTH);
         } else if (!bluetoothSPP.isServiceAvailable()) {
@@ -219,9 +228,54 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_fourth).setVisibility(View.GONE);
         findViewById(R.id.initial_fifth).setVisibility(View.GONE);
+        findViewById(R.id.initial_third_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fourthProgress();
+            }
+        });
+    }
+
+    private void fourthProgress() {
+        findViewById(R.id.initial_first).setVisibility(View.GONE);
+        findViewById(R.id.initial_second).setVisibility(View.GONE);
+        findViewById(R.id.initial_third).setVisibility(View.GONE);
+        findViewById(R.id.initial_fourth).setVisibility(View.VISIBLE);
+        findViewById(R.id.initial_fifth).setVisibility(View.GONE);
+        findViewById(R.id.initial_fourth_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fifthProgress();
+            }
+        });
     }
 
     private void fifthProgress() {
+        findViewById(R.id.initial_first).setVisibility(View.GONE);
+        findViewById(R.id.initial_second).setVisibility(View.GONE);
+        findViewById(R.id.initial_third).setVisibility(View.GONE);
+        findViewById(R.id.initial_fourth).setVisibility(View.GONE);
+        findViewById(R.id.initial_fifth).setVisibility(View.VISIBLE);
+        findViewById(R.id.initial_fifth_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(InitialActivity.this)
+                        .setTitle("이 자세로 설정하시겠습니까?")
+                        .setMessage("지금 설정한 내용을 기준으로 향후 자세를 분석합니다.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                            }
+                        })
+                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        });
         getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
     }
 
@@ -232,7 +286,7 @@ public class InitialActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 Log.d("Discovery", device.getName());
-                if (device.getName().equals("ONE RED")) {
+                if (device.getName().equals("Spine Up")) {
                     bluetoothAdapter.cancelDiscovery();
                     InitialActivity.this.targetDevice = device;
                     ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
@@ -258,6 +312,15 @@ public class InitialActivity extends AppCompatActivity {
                                 Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
                                 InitialActivity.this.unregisterReceiver(broadcastReceiver);
                                 firstProgress();
+                            }
+                        })
+                        .setNeutralButton("설정 생략하기", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                bluetoothSPP.stopService();
+                                InitialActivity.this.unregisterReceiver(broadcastReceiver);
+                                thirdProgress();
+                                //startActivity(new Intent(InitialActivity.this, MainActivity.class));
                             }
                         }).show();
             }
