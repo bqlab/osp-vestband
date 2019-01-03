@@ -104,9 +104,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void firstProgress() {
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_first_title));
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_first_title));
         findViewById(R.id.initial_first).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -147,9 +147,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void secondProgress() {
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -233,9 +233,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void thirdProgress() {
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.VISIBLE);
@@ -250,9 +250,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void fourthProgress() {
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fourth_title));
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fourth_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -267,9 +267,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void fifthProgress() {
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fifth_title));
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fifth_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
