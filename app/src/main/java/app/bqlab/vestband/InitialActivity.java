@@ -145,25 +145,51 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third).setVisibility(View.GONE);
         findViewById(R.id.initial_fourth).setVisibility(View.GONE);
         findViewById(R.id.initial_fifth).setVisibility(View.GONE);
+        findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isConnected)
+                    thirdProgress();
+            }
+        });
         bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
                 isConnected = true;
                 getSharedPreferences("deviceName", MODE_PRIVATE).edit().putString(id, name).apply();
                 getSharedPreferences("deviceAddress", MODE_PRIVATE).edit().putString(id, address).apply();
-                Toast.makeText(InitialActivity.this, "디바이스가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                ((Button)findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
+                ((Button)findViewById(R.id.initial_second_button)).setBackground(getResources().getDrawable(R.drawable.app_button_black));
                 thirdProgress();
             }
 
             @Override
             public void onDeviceDisconnected() {
                 isConnected = false;
-                Toast.makeText(InitialActivity.this, "디바이스와의 연결이 끊겼습니다.", Toast.LENGTH_SHORT).show();
+                Log.d("Connection", "Disconnected");
+                new AlertDialog.Builder(InitialActivity.this)
+                        .setMessage("디바이스와 연결할 수 없습니다.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                firstProgress();
+                            }
+                        }).show();
             }
 
             @Override
             public void onDeviceConnectionFailed() {
-                Toast.makeText(InitialActivity.this, "디바이스를 등록할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                Log.d("Connection", "Failed");
+                new AlertDialog.Builder(InitialActivity.this)
+                        .setMessage("디바이스와 연결할 수 없습니다.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                firstProgress();
+                            }
+                        }).show();
             }
         });
         if (!bluetoothSPP.isBluetoothAvailable()) {
@@ -188,7 +214,11 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void thirdProgress() {
-        Toast.makeText(this, "thirdProgress", Toast.LENGTH_LONG).show();
+        findViewById(R.id.initial_first).setVisibility(View.GONE);
+        findViewById(R.id.initial_second).setVisibility(View.GONE);
+        findViewById(R.id.initial_third).setVisibility(View.VISIBLE);
+        findViewById(R.id.initial_fourth).setVisibility(View.GONE);
+        findViewById(R.id.initial_fifth).setVisibility(View.GONE);
     }
 
     private void fifthProgress() {
@@ -202,11 +232,11 @@ public class InitialActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 Log.d("Discovery", device.getName());
-                if (device.getName().equals("Spine Up")) {
+                if (device.getName().equals("ONE RED")) {
                     bluetoothAdapter.cancelDiscovery();
                     InitialActivity.this.targetDevice = device;
-                    bluetoothSPP.connect(targetDevice.getAddress());
                     ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
+                    bluetoothSPP.connect(targetDevice.getAddress());
                     InitialActivity.this.unregisterReceiver(broadcastReceiver);
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
