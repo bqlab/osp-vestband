@@ -66,8 +66,11 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("first", true)) {
                             startActivity(new Intent(LoginActivity.this, InitialActivity.class));
-                        } else
+                            finish();
+                        } else {
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        }
                     }
                 }
             }

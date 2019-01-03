@@ -1,6 +1,7 @@
 package app.bqlab.vestband;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -23,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -43,6 +45,7 @@ public class InitialActivity extends AppCompatActivity {
     private static final int ACCESS_COARSE_LOCATION = 2;
     boolean isConnected = false;
     String id;
+    android.support.v7.app.ActionBar actionBar;
     BluetoothSPP bluetoothSPP;
     BluetoothAdapter bluetoothAdapter;
     BluetoothDevice targetDevice;
@@ -94,12 +97,16 @@ public class InitialActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION);
         }
+        actionBar = getSupportActionBar();
         id = getIntent().getStringExtra("id");
         bluetoothSPP = new BluetoothSPP(this);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     private void firstProgress() {
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_first_title));
+        actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.initial_actionbar);
         findViewById(R.id.initial_first).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -140,6 +147,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void secondProgress() {
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
+        actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.initial_actionbar);
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -223,6 +233,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void thirdProgress() {
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
+        actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.initial_actionbar);
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.VISIBLE);
@@ -237,6 +250,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void fourthProgress() {
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fourth_title));
+        actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.initial_actionbar);
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -251,6 +267,9 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void fifthProgress() {
+        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fifth_title));
+        actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.initial_actionbar);
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -266,6 +285,7 @@ public class InitialActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                                finish();
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
