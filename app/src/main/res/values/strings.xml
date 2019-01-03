@@ -40,6 +40,7 @@
     <string name="initial_second_text">Spine Up을 찾습니다.</string>
     <string name="initial_second_text2">앱과 Spine Up를 연결하기 위해\nSpine Up의 전원버튼을\n더블 클릭해 주세요.</string>
     <string name="initial_second_button">Spine Up을 검색중 입니다.</string>
+    <string name="initial_second_button2">연결중 입니다.</string>
     <string name="initial_third_text">바른 자세를 설정해 주세요.</string>
     <string name="initial_third_text2">스마트폰을 눈높이로 들고 목과 허리를\n최대한 바르게 펴신 후, 다음을 눌러주세요.</string>
     <string name="initial_third_button">다음</string>

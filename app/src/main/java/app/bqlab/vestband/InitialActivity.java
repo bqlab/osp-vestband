@@ -1,15 +1,26 @@
 package app.bqlab.vestband;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -17,6 +28,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,38 +38,68 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class InitialActivity extends AppCompatActivity {
 
-    final int REQUEST_ENABLE_BLUETOOTH = 0;
+    private static final int REQUEST_ENABLE_BLUETOOTH = 0;
+    private static final int REQUEST_DISCOVERABLE = 1;
+    private static final int ACCESS_COARSE_LOCATION = 2;
     boolean isConnected = false;
     String id;
     BluetoothSPP bluetoothSPP;
+    BluetoothAdapter bluetoothAdapter;
+    BluetoothDevice targetDevice;
+    Set<BluetoothDevice> pairedDevices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
+        init();
         firstProgress();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_ENABLE_BLUETOOTH:
-                    secondProgress();
-                    break;
-            }
-        } else {
+        if (resultCode == Activity.RESULT_CANCELED) {
             switch (requestCode) {
                 case REQUEST_ENABLE_BLUETOOTH:
                     Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
                     firstProgress();
                     break;
+                case REQUEST_DISCOVERABLE:
+                    Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
+                    Log.d("Discoverable", Integer.toString(bluetoothAdapter.getScanMode()));
+                    firstProgress();
+                    break;
+                case ACCESS_COARSE_LOCATION:
+                    Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
+                    Log.d("Discoverable", Integer.toString(bluetoothAdapter.getScanMode()));
+                    firstProgress();
+            }
+        } else {
+            switch (requestCode) {
+                case REQUEST_ENABLE_BLUETOOTH:
+                    secondProgress();
+                    break;
+                case REQUEST_DISCOVERABLE:
+                    Log.d("Discoverable", Integer.toString(bluetoothAdapter.getScanMode()));
+                    secondProgress();
+                    break;
+                case BluetoothState.REQUEST_CONNECT_DEVICE:
+                    bluetoothSPP.connect(data);
+                    break;
             }
         }
     }
 
-    private void firstProgress() {
+    private void init() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION);
+        }
         id = getIntent().getStringExtra("id");
+        bluetoothSPP = new BluetoothSPP(this);
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    private void firstProgress() {
         findViewById(R.id.initial_first).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -103,7 +145,27 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third).setVisibility(View.GONE);
         findViewById(R.id.initial_fourth).setVisibility(View.GONE);
         findViewById(R.id.initial_fifth).setVisibility(View.GONE);
-        bluetoothSPP = new BluetoothSPP(this);
+        bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+            @Override
+            public void onDeviceConnected(String name, String address) {
+                isConnected = true;
+                getSharedPreferences("deviceName", MODE_PRIVATE).edit().putString(id, name).apply();
+                getSharedPreferences("deviceAddress", MODE_PRIVATE).edit().putString(id, address).apply();
+                Toast.makeText(InitialActivity.this, "디바이스가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                thirdProgress();
+            }
+
+            @Override
+            public void onDeviceDisconnected() {
+                isConnected = false;
+                Toast.makeText(InitialActivity.this, "디바이스와의 연결이 끊겼습니다.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDeviceConnectionFailed() {
+                Toast.makeText(InitialActivity.this, "디바이스를 등록할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
         if (!bluetoothSPP.isBluetoothAvailable()) {
             Toast.makeText(InitialActivity.this, "지원하지 않는 기기입니다.", Toast.LENGTH_LONG).show();
             finishAffinity();
@@ -113,52 +175,62 @@ public class InitialActivity extends AppCompatActivity {
             bluetoothSPP.setupService();
             bluetoothSPP.startService(BluetoothState.DEVICE_OTHER);
             secondProgress();
+        } else if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE), REQUEST_DISCOVERABLE);
         } else if (!isConnected) {
-            bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
-                @Override
-                public void onDeviceConnected(String name, String address) {
-                    isConnected = true;
-                    getSharedPreferences("deviceName", MODE_PRIVATE).edit().putString(id, name).apply();
-                    getSharedPreferences("deviceAddress", MODE_PRIVATE).edit().putString(id, address).apply();
-                    Toast.makeText(InitialActivity.this, "디바이스가 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                    thirdProgress();
-                }
-
-                @Override
-                public void onDeviceDisconnected() {
-                    isConnected = false;
-                    Toast.makeText(InitialActivity.this, "디바이스와의 연결이 끊겼습니다.", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onDeviceConnectionFailed() {
-                    Toast.makeText(InitialActivity.this, "디바이스를 등록할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                }
-            });
-            final DeviceList deviceList = new DeviceList();
-            new AlertDialog.Builder(InitialActivity.this)
-                    .setTitle("디바이스를 선택하세요.")
-                    .setView(findViewById(R.id.list_devices))
-                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton("스캔", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
+            registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+            registerReceiver(broadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+            pairedDevices = bluetoothAdapter.getBondedDevices();
+            if (bluetoothAdapter.isDiscovering())
+                bluetoothAdapter.cancelDiscovery();
+            bluetoothAdapter.startDiscovery();
         }
     }
 
     private void thirdProgress() {
-
+        Toast.makeText(this, "thirdProgress", Toast.LENGTH_LONG).show();
     }
 
     private void fifthProgress() {
-        getSharedPreferences("flag", MODE_PRIVATE).edit().putBoolean("first", false).apply();
+        getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
     }
+
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                Log.d("Discovery", device.getName());
+                if (device.getName().equals("Spine Up")) {
+                    bluetoothAdapter.cancelDiscovery();
+                    InitialActivity.this.targetDevice = device;
+                    bluetoothSPP.connect(targetDevice.getAddress());
+                    ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
+                    InitialActivity.this.unregisterReceiver(broadcastReceiver);
+                }
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                Log.d("Discovery", "Finished");
+                new AlertDialog.Builder(context)
+                        .setMessage("장치를 찾을 수 없습니다.")
+                        .setCancelable(false)
+                        .setPositiveButton("재시도", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (bluetoothAdapter.isDiscovering())
+                                    bluetoothAdapter.cancelDiscovery();
+                                bluetoothAdapter.startDiscovery();
+                            }
+                        })
+                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
+                                InitialActivity.this.unregisterReceiver(broadcastReceiver);
+                                firstProgress();
+                            }
+                        }).show();
+            }
+        }
+    };
 }

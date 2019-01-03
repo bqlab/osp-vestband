@@ -1,9 +1,13 @@
 package app.bqlab.vestband;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -60,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }).show();
                     } else {
-                        if (getSharedPreferences("flag", MODE_PRIVATE).getBoolean("first", true)) {
+                        if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("first", true)) {
                             startActivity(new Intent(LoginActivity.this, InitialActivity.class));
                         } else
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
