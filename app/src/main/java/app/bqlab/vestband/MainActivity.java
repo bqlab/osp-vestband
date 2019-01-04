@@ -43,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_CANCELED) {
             switch (requestCode) {
                 case REQUEST_ENABLE_BLUETOOTH:
-                    Log.d("Request", "Bluetooth denied")
+                    Log.d("Request", "Bluetooth denied");
                     break;
                 case REQUEST_DISCOVERABLE:
-                    Log.d("Request", "Discoverable denied")
+                    Log.d("Request", "Discoverable denied");
                     break;
             }
         } else {
