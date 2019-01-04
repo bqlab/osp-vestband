@@ -44,7 +44,10 @@ public class InitialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
         init();
-        firstProgress();
+        if (getIntent().getBooleanExtra("thirdProgress", false))
+            thirdProgress();
+        else
+            firstProgress();
     }
 
     @Override
@@ -285,7 +288,8 @@ public class InitialActivity extends AppCompatActivity {
                                 int notifyTime = numberPicker.getValue() * 5;
                                 Log.d("notifyTime", Integer.toString(notifyTime));
                                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", notifyTime).apply();
-                                startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                                if (!getIntent().getBooleanExtra("thirdProgress", false))
+                                    startActivity(new Intent(InitialActivity.this, MainActivity.class));
                                 finish();
                             }
                         })

@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothSPP = new BluetoothSPP(MainActivity.this);
+        //main_bar setting
         findViewById(R.id.main_bar_dashboard).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,11 +94,57 @@ public class MainActivity extends AppCompatActivity {
                 getLayoutByIndex(3);
             }
         });
-        if (!BluetoothService.isConnected)
-            Toast.makeText(this, "장치와 연결되어 있지 않습니다.", Toast.LENGTH_LONG).show();
+        //main_dashboard setting
+        findViewById(R.id.main_dashboard_analisys).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(1);
+            }
+        });
+        findViewById(R.id.main_dashboard_stretch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(2);
+            }
+        });
+        //main_setting setting
+        findViewById(R.id.main_setting_top_connect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(4);
+            }
+        });
+        findViewById(R.id.main_setting_set_notify).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(5);
+            }
+        });
+        findViewById(R.id.main_setting_set_posture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, InitialActivity.class);
+                i.putExtra("thirdProgress", true);
+                startActivity(i);
+            }
+        });
+        findViewById(R.id.main_setting_my_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(6);
+            }
+        });
+        findViewById(R.id.main_setting_my_version).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(7);
+            }
+        });
     }
 
     private void connectDevice() {
+        if (!BluetoothService.isConnected)
+            Toast.makeText(this, "장치와 연결되어 있지 않습니다.", Toast.LENGTH_LONG).show();
         bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             @Override
             public void onDataReceived(byte[] data, String message) {
