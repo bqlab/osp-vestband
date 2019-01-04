@@ -140,6 +140,21 @@ public class MainActivity extends AppCompatActivity {
                 getLayoutByIndex(7);
             }
         });
+        findViewById(R.id.main_setting_my_notice).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("등록된 공지가 없습니다.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        });
+        //main_setting_notify setting
+        
     }
 
     private void connectDevice() {
