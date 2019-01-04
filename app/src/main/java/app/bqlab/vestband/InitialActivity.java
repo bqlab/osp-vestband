@@ -37,7 +37,6 @@ public class InitialActivity extends AppCompatActivity {
     android.support.v7.app.ActionBar actionBar;
     BluetoothSPP bluetoothSPP;
     BluetoothAdapter bluetoothAdapter;
-    BluetoothDevice targetDevice;
     Set<BluetoothDevice> pairedDevices;
 
     @Override
@@ -295,9 +294,9 @@ public class InitialActivity extends AppCompatActivity {
                 Log.d("Discovery", device.getName());
                 if (device.getName().equals("Spine Up")) {
                     bluetoothAdapter.cancelDiscovery();
-                    InitialActivity.this.targetDevice = device;
+                    BluetoothService.device = device;
                     ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
-                    bluetoothSPP.connect(targetDevice.getAddress());
+                    bluetoothSPP.connect(BluetoothService.device.getAddress());
                     InitialActivity.this.unregisterReceiver(broadcastReceiver);
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {

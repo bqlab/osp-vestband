@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int ACCESS_COARSE_LOCATION = 2;
     String id;
     BluetoothSPP bluetoothSPP;
-    BluetoothDevice targetDevice;
     BluetoothAdapter bluetoothAdapter;
     Set<BluetoothDevice> pairedDevices;
 
@@ -111,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataReceived(byte[] data, String message) {
                 BluetoothService.degree = Integer.parseInt(message);
-
             }
         });
         if (!bluetoothSPP.isBluetoothAvailable()) {
@@ -151,9 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Discovery", device.getName());
                 if (device.getName().equals("Spine Up")) {
                     bluetoothAdapter.cancelDiscovery();
-                    MainActivity.this.targetDevice = device;
-                    ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
-                    bluetoothSPP.connect(targetDevice.getAddress());
+                    BluetoothService.device = device;
+                    bluetoothSPP.connect(BluetoothService.device.getAddress());
                     MainActivity.this.unregisterReceiver(broadcastReceiver);
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
