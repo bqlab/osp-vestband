@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class BluetoothService extends Service implements Runnable {
-
+    public static String id;
     public static int degree = 0;
-    public static boolean connected = false;
+    public static boolean isConnected = false;
     public static BluetoothDevice device;
 
     @Override
@@ -26,7 +26,7 @@ public class BluetoothService extends Service implements Runnable {
 
     @Override
     public void run() {
-        while (connected) {
+        while (isConnected) {
             try {
                 Thread.sleep(1000);
                 Log.d("Data", String.valueOf(degree));

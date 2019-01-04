@@ -67,13 +67,11 @@ public class LoginActivity extends AppCompatActivity {
                                 }).show();
                     } else {
                         if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("first", true)) {
-                            Intent i = new Intent(new Intent(LoginActivity.this, InitialActivity.class));
-                            i.putExtra("id", id);
-                            startActivity(i);
+                            startActivity( new Intent(new Intent(LoginActivity.this, InitialActivity.class)));
+                            BluetoothService.id = id;
                         } else {
-                            Intent i = new Intent(new Intent(LoginActivity.this, MainActivity.class));
-                            i.putExtra("id", id);
-                            startActivity(i);
+                            startActivity( new Intent(new Intent(LoginActivity.this, MainActivity.class)));
+                            BluetoothService.id = id;
                         }
                     }
                 }
