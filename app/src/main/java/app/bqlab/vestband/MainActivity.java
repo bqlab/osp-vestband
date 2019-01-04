@@ -69,6 +69,30 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothSPP = new BluetoothSPP(MainActivity.this);
+        findViewById(R.id.main_bar_dashboard).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(0);
+            }
+        });
+        findViewById(R.id.main_bar_analisys).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(1);
+            }
+        });
+        findViewById(R.id.main_bar_stretch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(2);
+            }
+        });
+        findViewById(R.id.main_bar_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(3);
+            }
+        });
         if (!BluetoothService.isConnected)
             Toast.makeText(this, "장치와 연결되어 있지 않습니다.", Toast.LENGTH_LONG).show();
     }
