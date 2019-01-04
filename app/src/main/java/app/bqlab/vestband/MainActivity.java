@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Debug;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     private static final int REQUEST_ENABLE_BLUETOOTH = 0;
     private static final int REQUEST_DISCOVERABLE = 1;
     int rightTime, badTime, bad, right;
+    boolean isClickedBackbutton;
     BluetoothAdapter bluetoothAdapter;
     BluetoothSPP bluetoothSPP;
 
@@ -72,6 +75,27 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                     break;
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isClickedBackbutton) {
+            Toast.makeText(this, "한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
+            isClickedBackbutton = true;
+        } else {
+            super.onBackPressed();
+            ActivityCompat.finishAffinity(this);
+        }
+        new CountDownTimer(3000, 1000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            public void onFinish() {
+                isClickedBackbutton = false;
+            }
+        }.start();
     }
 
     @Override
