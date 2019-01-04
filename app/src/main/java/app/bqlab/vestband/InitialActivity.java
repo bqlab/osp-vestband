@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,7 +93,7 @@ public class InitialActivity extends AppCompatActivity {
     private void firstProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_first_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_first_title));
         findViewById(R.id.initial_first).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -135,7 +136,7 @@ public class InitialActivity extends AppCompatActivity {
     private void secondProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -154,8 +155,8 @@ public class InitialActivity extends AppCompatActivity {
             @Override
             public void onDeviceConnected(String name, String address) {
                 BluetoothService.isConnected = true;
-                ((Button)findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
-                ((Button)findViewById(R.id.initial_second_button)).setBackground(getResources().getDrawable(R.drawable.app_button_black));
+                ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
+                ((Button) findViewById(R.id.initial_second_button)).setBackground(getResources().getDrawable(R.drawable.app_button_black));
                 thirdProgress();
             }
 
@@ -219,7 +220,7 @@ public class InitialActivity extends AppCompatActivity {
     private void thirdProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.VISIBLE);
@@ -236,7 +237,7 @@ public class InitialActivity extends AppCompatActivity {
     private void fourthProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fourth_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fourth_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -253,12 +254,16 @@ public class InitialActivity extends AppCompatActivity {
     private void fifthProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fifth_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fifth_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
         findViewById(R.id.initial_fourth).setVisibility(View.GONE);
         findViewById(R.id.initial_fifth).setVisibility(View.VISIBLE);
+        final NumberPicker numberPicker = findViewById(R.id.initial_fifth_picker);
+        numberPicker.setMaxValue(2);
+        numberPicker.setMinValue(0);
+        numberPicker.setDisplayedValues(new String[]{"즉시", "5초", "10초"});
         findViewById(R.id.initial_fifth_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,6 +273,9 @@ public class InitialActivity extends AppCompatActivity {
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                int notifyTime = numberPicker.getValue() * 5;
+                                Log.d("notifyTime", Integer.toString(notifyTime));
+                                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", notifyTime).apply();
                                 startActivity(new Intent(new Intent(InitialActivity.this, MainActivity.class)));
                                 finish();
                             }
