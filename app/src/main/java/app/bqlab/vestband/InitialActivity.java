@@ -57,12 +57,10 @@ public class InitialActivity extends AppCompatActivity {
                     break;
                 case REQUEST_DISCOVERABLE:
                     Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
-                    Log.d("Discoverable", Integer.toString(bluetoothAdapter.getScanMode()));
                     firstProgress();
                     break;
                 case ACCESS_COARSE_LOCATION:
                     Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
-                    Log.d("Discoverable", Integer.toString(bluetoothAdapter.getScanMode()));
                     firstProgress();
             }
         } else {
