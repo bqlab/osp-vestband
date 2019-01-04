@@ -161,6 +161,7 @@ public class InitialActivity extends AppCompatActivity {
             @Override
             public void onDeviceConnected(String name, String address) {
                 BluetoothService.isConnected = true;
+                startService(new Intent(InitialActivity.this, BluetoothService.class));
                 ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
                 ((Button) findViewById(R.id.initial_second_button)).setBackground(getResources().getDrawable(R.drawable.app_button_black));
                 thirdProgress();
