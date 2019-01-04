@@ -12,7 +12,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         init();
         connectDevice();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -64,16 +66,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void init() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothSPP = new BluetoothSPP(MainActivity.this);
-        bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-            @Override
-            public void onDataReceived(byte[] data, String message) {
-                BluetoothService.degree = Integer.parseInt(message);
-            }
-        });
         if (!BluetoothService.isConnected)
             Toast.makeText(this, "장치와 연결되어 있지 않습니다.", Toast.LENGTH_LONG).show();
     }
@@ -141,6 +136,42 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void getLayoutByIndex(int idx) {
+        FrameLayout main = findViewById(R.id.main);
+        LinearLayout mainBar = findViewById(R.id.main_bar);
+        for (int i = 0; i < main.getChildCount(); i++)
+            main.getChildAt(i).setVisibility(View.GONE);
+        main.getChildAt(idx).setVisibility(View.VISIBLE);
+        if (idx < 4) {
+            switch (idx) {
+                case 0:
+                    ((LinearLayout)mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_p));
+                    ((LinearLayout)mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
+                    ((LinearLayout)mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout)mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    break;
+                case 1:
+                    ((LinearLayout)mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout)mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_p));
+                    ((LinearLayout)mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout)mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    break;
+                case 2:
+                    ((LinearLayout)mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout)mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
+                    ((LinearLayout)mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_p));
+                    ((LinearLayout)mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    break;
+                case 3:
+                    ((LinearLayout)mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout)mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
+                    ((LinearLayout)mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout)mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_p));
+                    break;
+            }
+        }
+    }
+
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -174,8 +205,7 @@ public class MainActivity extends AppCompatActivity {
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(MainActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
-                                MainActivity.this.unregisterReceiver(broadcastReceiver);
+                                dialog.dismiss();
                             }
                         }).show();
             }
