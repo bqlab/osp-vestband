@@ -20,6 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+
+import java.util.ArrayList;
+
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 
@@ -93,6 +100,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //main_dashboard setting
+        PieChart chart = findViewById(R.id.main_dashboard_chart);
+        ArrayList<PieEntry> values = new ArrayList<>();
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
+        chart.setTouchEnabled(false);
+        chart.setTransparentCircleRadius(0f);
+        chart.setExtraOffsets(0, 0, 0, 0);
+        chart.setDrawSliceText(false);
+        chart.setDrawHoleEnabled(true);
+        chart.setHoleRadius(90f);
+        chart.setHoleColor(getResources().getColor(R.color.colorWhite));
+        chart.getLegend().setEnabled(false);
+        values.add(new PieEntry(34f, "partA"));
+        values.add(new PieEntry(25f, "partB"));
+        PieDataSet dataSet = new PieDataSet(values, "Data");
+        dataSet.setSliceSpace(0f);
+        dataSet.setColors(getResources().getColor(R.color.colorRedForChart), getResources().getColor(R.color.colorBlueForChart));
+        PieData data = new PieData(dataSet);
+        data.setValueTextSize(0f);
+        chart.setData(data);
         findViewById(R.id.main_dashboard_analisys).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,10 +134,10 @@ public class MainActivity extends AppCompatActivity {
         });
         //main_setting setting
         if (UserService.isConnected) {
-            ((TextView)findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
+            ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
             findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_blue_circle));
         } else {
-            ((TextView)findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
+            ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
             findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_red_circle));
         }
         findViewById(R.id.main_setting_top_connect).setOnClickListener(new View.OnClickListener() {
@@ -164,9 +191,9 @@ public class MainActivity extends AppCompatActivity {
         });
         //main_setting_connect setting
         if (UserService.isConnected)
-            ((TextView)findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
+            ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
         else
-            ((TextView)findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
+            ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
         findViewById(R.id.main_setting_connect_top_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAdapter(a, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ((TextView)findViewById(R.id.main_setting_notify_notify_time)).setText(s[which]);
+                                ((TextView) findViewById(R.id.main_setting_notify_notify_time)).setText(s[which]);
                                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", which).apply();
                             }
                         }).show();
@@ -200,11 +227,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //main_setting_profile setting
-        ((TextView)findViewById(R.id.main_setting_profile_email)).setText(UserService.id);
-        ((TextView)findViewById(R.id.main_setting_profile_name)).setText(getSharedPreferences("name", MODE_PRIVATE).getString(UserService.id, "none"));
-        ((TextView)findViewById(R.id.main_setting_profile_sex)).setText(getSharedPreferences("sex", MODE_PRIVATE).getString(UserService.id, "none"));
-        ((TextView)findViewById(R.id.main_setting_profile_birth)).setText(getSharedPreferences("birth", MODE_PRIVATE).getString(UserService.id, "none"));
-        ((TextView)findViewById(R.id.main_setting_profile_register)).setText(getSharedPreferences("register", MODE_PRIVATE).getString(UserService.id, "none"));
+        ((TextView) findViewById(R.id.main_setting_profile_email)).setText(UserService.id);
+        ((TextView) findViewById(R.id.main_setting_profile_name)).setText(getSharedPreferences("name", MODE_PRIVATE).getString(UserService.id, "none"));
+        ((TextView) findViewById(R.id.main_setting_profile_sex)).setText(getSharedPreferences("sex", MODE_PRIVATE).getString(UserService.id, "none"));
+        ((TextView) findViewById(R.id.main_setting_profile_birth)).setText(getSharedPreferences("birth", MODE_PRIVATE).getString(UserService.id, "none"));
+        ((TextView) findViewById(R.id.main_setting_profile_register)).setText(getSharedPreferences("register", MODE_PRIVATE).getString(UserService.id, "none"));
         findViewById(R.id.main_setting_profile_top_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,9 +267,9 @@ public class MainActivity extends AppCompatActivity {
         });
         //main_setting_version setting
         try {
-            ((TextView)findViewById(R.id.main_setting_version_current)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-            ((TextView)findViewById(R.id.main_setting_version_latest)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-            ((TextView)findViewById(R.id.main_setting_version_using)).setText("최신버전을 사용 중 입니다.\n");
+            ((TextView) findViewById(R.id.main_setting_version_current)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            ((TextView) findViewById(R.id.main_setting_version_latest)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            ((TextView) findViewById(R.id.main_setting_version_using)).setText("최신버전을 사용 중 입니다.\n");
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
