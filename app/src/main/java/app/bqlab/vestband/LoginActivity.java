@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void init() {
+        startService(new Intent(this, BluetoothService.class));
         ((EditText)findViewById(R.id.login_id)).setText(getIntent().getStringExtra("id"));
         findViewById(R.id.login_find).setOnClickListener(new View.OnClickListener() {
             @Override
