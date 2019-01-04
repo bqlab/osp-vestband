@@ -151,6 +151,12 @@ public class InitialActivity extends AppCompatActivity {
                 }
             }
         });
+        bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+            @Override
+            public void onDataReceived(byte[] data, String message) {
+                BluetoothService.degree = Integer.parseInt(message);
+            }
+        });
         bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
@@ -229,6 +235,8 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("right", BluetoothService.degree).apply();
+                Log.d("Right", Integer.toString(BluetoothService.degree));
                 fourthProgress();
             }
         });
@@ -246,6 +254,8 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_fourth_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("bad", BluetoothService.degree).apply();
+                Log.d("Bad", Integer.toString(BluetoothService.degree));
                 fifthProgress();
             }
         });
@@ -276,7 +286,7 @@ public class InitialActivity extends AppCompatActivity {
                                 int notifyTime = numberPicker.getValue() * 5;
                                 Log.d("notifyTime", Integer.toString(notifyTime));
                                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", notifyTime).apply();
-                                startActivity(new Intent(new Intent(InitialActivity.this, MainActivity.class)));
+                                startActivity(new Intent(InitialActivity.this, MainActivity.class));
                                 finish();
                             }
                         })

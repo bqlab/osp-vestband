@@ -7,6 +7,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+
 public class BluetoothService extends Service implements Runnable {
     public static String id;
     public static int degree = 0;
