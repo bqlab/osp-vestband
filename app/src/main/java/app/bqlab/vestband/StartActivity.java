@@ -26,6 +26,7 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(StartActivity.this, InitialActivity.class));
+                getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
             }
         });
         findViewById(R.id.start_register).setOnClickListener(new View.OnClickListener() {

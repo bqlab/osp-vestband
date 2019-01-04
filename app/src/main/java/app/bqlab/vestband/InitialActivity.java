@@ -146,7 +146,7 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BluetoothService.isConnected) {
+                if (UserService.isConnected) {
                     bluetoothSPP.stopService();
                     thirdProgress();
                 }
@@ -155,14 +155,14 @@ public class InitialActivity extends AppCompatActivity {
         bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             @Override
             public void onDataReceived(byte[] data, String message) {
-                BluetoothService.degree = Integer.parseInt(message);
+                UserService.degree = Integer.parseInt(message);
             }
         });
         bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
-                BluetoothService.isConnected = true;
-                startService(new Intent(InitialActivity.this, BluetoothService.class));
+                UserService.isConnected = true;
+                startService(new Intent(InitialActivity.this, UserService.class));
                 ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
                 ((Button) findViewById(R.id.initial_second_button)).setBackground(getResources().getDrawable(R.drawable.app_button_black));
                 thirdProgress();
@@ -170,7 +170,7 @@ public class InitialActivity extends AppCompatActivity {
 
             @Override
             public void onDeviceDisconnected() {
-                BluetoothService.isConnected = false;
+                UserService.isConnected = false;
                 Log.d("Connection", "Disconnected");
                 new AlertDialog.Builder(InitialActivity.this)
                         .setMessage("디바이스와 연결할 수 없습니다.")
@@ -215,7 +215,7 @@ public class InitialActivity extends AppCompatActivity {
             secondProgress();
         } else if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE), REQUEST_DISCOVERABLE);
-        } else if (!BluetoothService.isConnected) {
+        } else if (!UserService.isConnected) {
             registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
             registerReceiver(broadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
             pairedDevices = bluetoothAdapter.getBondedDevices();
@@ -237,8 +237,8 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("right", BluetoothService.degree).apply();
-                Log.d("Right", Integer.toString(BluetoothService.degree));
+                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("right", UserService.degree).apply();
+                Log.d("Right", Integer.toString(UserService.degree));
                 fourthProgress();
             }
         });
@@ -256,8 +256,8 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_fourth_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("bad", BluetoothService.degree).apply();
-                Log.d("Bad", Integer.toString(BluetoothService.degree));
+                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("bad", UserService.degree).apply();
+                Log.d("Bad", Integer.toString(UserService.degree));
                 fifthProgress();
             }
         });
@@ -314,9 +314,9 @@ public class InitialActivity extends AppCompatActivity {
                     Log.d("Discovery", device.getName());
                     if (device.getName().equals("Spine Up")) {
                         bluetoothAdapter.cancelDiscovery();
-                        BluetoothService.device = device;
+                        UserService.device = device;
                         ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
-                        bluetoothSPP.connect(BluetoothService.device.getAddress());
+                        bluetoothSPP.connect(UserService.device.getAddress());
                         InitialActivity.this.unregisterReceiver(broadcastReceiver);
                     }
                 } catch (Exception e) {

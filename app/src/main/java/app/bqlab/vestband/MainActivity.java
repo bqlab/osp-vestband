@@ -9,21 +9,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Objects;
-
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
-import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -108,6 +106,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //main_setting setting
+        if (UserService.isConnected) {
+            ((TextView)findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
+            findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_blue_circle));
+        } else {
+            ((TextView)findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
+            findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_red_circle));
+        }
         findViewById(R.id.main_setting_top_connect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,6 +122,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_setting_set_notify).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String right = String.valueOf(getSharedPreferences("setting", MODE_PRIVATE).getInt("right", 0)) + "도";
+                String bad = String.valueOf(getSharedPreferences("setting", MODE_PRIVATE).getInt("bad", 0)) + "도";
+                ((TextView) findViewById(R.id.main_setting_notify_notify_right)).setText(right);
+                ((TextView) findViewById(R.id.main_setting_notify_notify_bad)).setText(bad);
                 getLayoutByIndex(5);
             }
         });
@@ -153,30 +162,131 @@ public class MainActivity extends AppCompatActivity {
                         }).show();
             }
         });
+        //main_setting_connect setting
+        if (UserService.isConnected)
+            ((TextView)findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
+        else
+            ((TextView)findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
+        findViewById(R.id.main_setting_connect_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(3);
+            }
+        });
         //main_setting_notify setting
-        
+        findViewById(R.id.main_setting_notify_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(3);
+            }
+        });
+        findViewById(R.id.main_setting_notify_notify_time).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String[] s = new String[]{"즉시>", "5초>", "10초>"};
+                final ArrayAdapter<String> a = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_singlechoice);
+                a.add("즉시");
+                a.add("5초");
+                a.add("10초");
+                new AlertDialog.Builder(MainActivity.this)
+                        .setAdapter(a, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((TextView)findViewById(R.id.main_setting_notify_notify_time)).setText(s[which]);
+                                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", which).apply();
+                            }
+                        }).show();
+
+            }
+        });
+        //main_setting_profile setting
+        ((TextView)findViewById(R.id.main_setting_profile_email)).setText(UserService.id);
+        ((TextView)findViewById(R.id.main_setting_profile_name)).setText(getSharedPreferences("name", MODE_PRIVATE).getString(UserService.id, "none"));
+        ((TextView)findViewById(R.id.main_setting_profile_sex)).setText(getSharedPreferences("sex", MODE_PRIVATE).getString(UserService.id, "none"));
+        ((TextView)findViewById(R.id.main_setting_profile_birth)).setText(getSharedPreferences("birth", MODE_PRIVATE).getString(UserService.id, "none"));
+        ((TextView)findViewById(R.id.main_setting_profile_register)).setText(getSharedPreferences("register", MODE_PRIVATE).getString(UserService.id, "none"));
+        findViewById(R.id.main_setting_profile_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(3);
+            }
+        });
+        findViewById(R.id.main_setting_profile_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "로그아웃되었습니다.", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                i.putExtra("id", UserService.id);
+                startActivity(i);
+                finish();
+            }
+        });
+        findViewById(R.id.main_setting_profile_withdrawal).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("서비스를 탈퇴하시겠습니까?")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(MainActivity.this, "탈퇴되었습니다.", Toast.LENGTH_LONG).show();
+                                getSharedPreferences("idpw", MODE_PRIVATE).edit().putString(UserService.id, "none").apply();
+                                Intent i = new Intent(MainActivity.this, StartActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        }).show();
+            }
+        });
+        //main_setting_version setting
+        try {
+            ((TextView)findViewById(R.id.main_setting_version_current)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            ((TextView)findViewById(R.id.main_setting_version_latest)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            ((TextView)findViewById(R.id.main_setting_version_using)).setText("최신버전을 사용 중 입니다.\n");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        findViewById(R.id.main_setting_version_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(3);
+            }
+        });
+        findViewById(R.id.main_setting_version_upgrade).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("스토어에서 정보를 불러올 수 없습니다.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        });
     }
 
     private void connectDevice() {
-        if (!BluetoothService.isConnected)
+        if (!UserService.isConnected)
             Toast.makeText(this, "장치와 연결되어 있지 않습니다.", Toast.LENGTH_LONG).show();
         bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             @Override
             public void onDataReceived(byte[] data, String message) {
-                BluetoothService.degree = Integer.parseInt(message);
+                UserService.degree = Integer.parseInt(message);
             }
         });
         bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
-                BluetoothService.isConnected = true;
-                startService(new Intent(MainActivity.this, BluetoothService.class));
+                UserService.isConnected = true;
+                startService(new Intent(MainActivity.this, UserService.class));
                 Toast.makeText(MainActivity.this, "연결되었습니다.", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onDeviceDisconnected() {
-                BluetoothService.isConnected = false;
+                UserService.isConnected = false;
                 new AlertDialog.Builder(MainActivity.this)
                         .setMessage("디바이스와 연결할 수 없습니다.")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -189,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDeviceConnectionFailed() {
-                BluetoothService.isConnected = false;
+                UserService.isConnected = false;
                 new AlertDialog.Builder(MainActivity.this)
                         .setMessage("디바이스와 연결할 수 없습니다.")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -200,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                         }).show();
             }
         });
-        if (!BluetoothService.isConnected)
+        if (!UserService.isConnected)
             searchDevice();
     }
 
@@ -213,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
             searchDevice();
         } else if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE), REQUEST_DISCOVERABLE);
-        } else if (!BluetoothService.isConnected) {
+        } else if (!UserService.isConnected) {
             registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
             registerReceiver(broadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
             if (bluetoothAdapter.isDiscovering())
@@ -231,28 +341,28 @@ public class MainActivity extends AppCompatActivity {
         if (idx < 4) {
             switch (idx) {
                 case 0:
-                    ((LinearLayout)mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_p));
-                    ((LinearLayout)mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
-                    ((LinearLayout)mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
-                    ((LinearLayout)mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_p));
+                    ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
+                    ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
                     break;
                 case 1:
-                    ((LinearLayout)mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
-                    ((LinearLayout)mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_p));
-                    ((LinearLayout)mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
-                    ((LinearLayout)mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_p));
+                    ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
                     break;
                 case 2:
-                    ((LinearLayout)mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
-                    ((LinearLayout)mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
-                    ((LinearLayout)mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_p));
-                    ((LinearLayout)mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
+                    ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_p));
+                    ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
                     break;
                 case 3:
-                    ((LinearLayout)mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
-                    ((LinearLayout)mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
-                    ((LinearLayout)mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
-                    ((LinearLayout)mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_p));
+                    ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analisys_np));
+                    ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_p));
                     break;
             }
         }
@@ -268,8 +378,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Discovery", device.getName());
                     if (device.getName().equals("Spine Up")) {
                         bluetoothAdapter.cancelDiscovery();
-                        BluetoothService.device = device;
-                        bluetoothSPP.connect(BluetoothService.device.getAddress());
+                        UserService.device = device;
+                        bluetoothSPP.connect(UserService.device.getAddress());
                         MainActivity.this.unregisterReceiver(broadcastReceiver);
                     }
                 } catch (Exception e) {

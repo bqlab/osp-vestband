@@ -39,7 +39,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppThemeNoActionBar" />
-        <service android:name=".BluetoothService"/>
+        <service android:name=".UserService"/>
     </application>
 
 </manifest>

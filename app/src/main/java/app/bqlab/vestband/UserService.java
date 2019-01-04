@@ -12,7 +12,7 @@ import android.util.Log;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
-public class BluetoothService extends Service {
+public class UserService extends Service {
     public static String id;
     public static int degree = 0;
     public static boolean isConnected = false;
@@ -21,6 +21,7 @@ public class BluetoothService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
     }
 
     @Override

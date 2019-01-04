@@ -24,8 +24,7 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    String id, pw, pw2, name, sex;
-    Date birth;
+    String id, pw, pw2, name, sex, birth, register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +34,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void init() {
-        sex = "male";
+        sex = "남자";
         findViewById(R.id.register_sex_male).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sex = "male";
+                sex = "남자";
                 ((Button) findViewById(R.id.register_sex_male)).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
                 ((Button) findViewById(R.id.register_sex_male)).setTextColor(getResources().getColor(R.color.colorWhite));
                 ((Button) findViewById(R.id.register_sex_female)).setBackground(getResources().getDrawable(R.drawable.app_button_white));
@@ -49,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         findViewById(R.id.register_sex_female).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sex = "female";
+                sex = "여자";
                 ((Button) findViewById(R.id.register_sex_female)).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
                 ((Button) findViewById(R.id.register_sex_female)).setTextColor(getResources().getColor(R.color.colorWhite));
                 ((Button) findViewById(R.id.register_sex_male)).setBackground(getResources().getDrawable(R.drawable.app_button_white));
@@ -59,18 +58,18 @@ public class RegisterActivity extends AppCompatActivity {
         ((RelativeLayout) findViewById(R.id.register_birth)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DatePicker d = new DatePicker(RegisterActivity.this);
+                final DatePicker datePicker = new DatePicker(RegisterActivity.this);
                 new AlertDialog.Builder(RegisterActivity.this)
-                        .setView(d)
+                        .setView(datePicker)
                         .setCancelable(false)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Calendar c = Calendar.getInstance();
-                                c.set(d.getYear(), d.getMonth(), d.getDayOfMonth());
-                                birth = c.getTime();
-                                String s = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).format(birth);
-                                ((TextView) findViewById(R.id.register_birth_day)).setText(s);
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+                                Date date = calendar.getTime();
+                                birth = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).format(date);
+                                ((TextView) findViewById(R.id.register_birth_day)).setText(birth);
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -101,16 +100,18 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (id.isEmpty() || name.isEmpty() || pw.isEmpty() || pw2.isEmpty() || sex.isEmpty() || birth == null) {
                     Toast.makeText(RegisterActivity.this, "빈칸이 있는지 다시 확인해주세요.", Toast.LENGTH_LONG).show();
                 } else {
-                    //way for retrieve to birth data: https://stackoverflow.com/a/12343346
+                    register = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).format(new Date());
                     getSharedPreferences("idpw", MODE_PRIVATE).edit().putString(id, pw).apply();
                     getSharedPreferences("name", MODE_PRIVATE).edit().putString(id, name).apply();
                     getSharedPreferences("sex", MODE_PRIVATE).edit().putString(id, sex).apply();
                     getSharedPreferences("name", MODE_PRIVATE).edit().putString(id, name).apply();
-                    getSharedPreferences("birth", MODE_PRIVATE).edit().putLong(id, birth.getTime()).apply();
+                    getSharedPreferences("birth", MODE_PRIVATE).edit().putString(id, birth).apply();
+                    getSharedPreferences("register", MODE_PRIVATE).edit().putString(id, register).apply();
                     Toast.makeText(RegisterActivity.this, "회원 가입이 완료되었습니다.", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                     i.putExtra("id", id);
                     startActivity(i);
+                    finish();
                 }
             }
         });
