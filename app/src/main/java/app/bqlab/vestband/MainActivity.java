@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Debug;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -30,10 +32,11 @@ import java.util.ArrayList;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Runnable {
 
     private static final int REQUEST_ENABLE_BLUETOOTH = 0;
     private static final int REQUEST_DISCOVERABLE = 1;
+    int rightTime, badTime, bad, right;
     BluetoothAdapter bluetoothAdapter;
     BluetoothSPP bluetoothSPP;
 
@@ -71,9 +74,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void run() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (UserService.isConnected) {
+                    try {
+                        Thread.sleep(1000);
+                        isAngleCorrect(UserService.degree);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
     private void init() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothSPP = new BluetoothSPP(MainActivity.this);
+        right = getSharedPreferences("setting", MODE_PRIVATE).getInt("right", 0);
+        bad = getSharedPreferences("setting", MODE_PRIVATE).getInt("bad", 0);
+        ((SwipeRefreshLayout)findViewById(R.id.main_refresh_layout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                finish();
+                overridePendingTransition( 0, 0);
+                startActivity(getIntent());
+                overridePendingTransition( 0, 0);
+                Toast.makeText(MainActivity.this, "새로고침이 완료되었습니다.", Toast.LENGTH_LONG).show();
+                ((SwipeRefreshLayout)findViewById(R.id.main_refresh_layout)).setRefreshing(false);
+            }
+        });
         //main_bar setting
         findViewById(R.id.main_bar_dashboard).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,16 +158,16 @@ public class MainActivity extends AppCompatActivity {
             chart.setHoleRadius(90f);
             chart.setHoleColor(getResources().getColor(R.color.colorWhite));
             chart.getLegend().setEnabled(false);
-            values.add(new PieEntry(34f, "partA"));
-            values.add(new PieEntry(25f, "partB"));
+            values.add(new PieEntry(badTime, "bad"));
+            values.add(new PieEntry(rightTime, "right"));
             PieDataSet dataSet = new PieDataSet(values, "Data");
             dataSet.setSliceSpace(0f);
             dataSet.setColors(getResources().getColor(R.color.colorRedForChart), getResources().getColor(R.color.colorBlueForChart));
             PieData data = new PieData(dataSet);
             data.setValueTextSize(0f);
             chart.setData(data);
-            ((TextView)findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorBlueForChart));
-            ((TextView)findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorBlueForChart));
+            ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
         } else {
             ArrayList<PieEntry> values = new ArrayList<>();
             chart.setUsePercentValues(true);
@@ -154,8 +187,8 @@ public class MainActivity extends AppCompatActivity {
             PieData data = new PieData(dataSet);
             data.setValueTextSize(0f);
             chart.setData(data);
-            ((TextView)findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorWhiteDark));
-            ((TextView)findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorWhiteDark));
+            ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.GONE);
         }
         //main_setting setting
         if (UserService.isConnected) {
@@ -417,6 +450,19 @@ public class MainActivity extends AppCompatActivity {
                     ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_p));
                     break;
             }
+        }
+    }
+
+    private void isAngleCorrect(int degree) {
+        if (degree > right - 10 && degree < right + 10) {
+            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("right", rightTime++).apply();
+            rightTime = getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0);
+            Log.d("Good", Integer.toString(rightTime));
+        }
+        if (degree > bad - 10 && degree < bad + 10) {
+            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("bad", rightTime++).apply();
+            badTime = getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0);
+            Log.d("Bad", Integer.toString(badTime));
         }
     }
 
