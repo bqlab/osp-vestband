@@ -100,26 +100,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //main_dashboard setting
-        PieChart chart = findViewById(R.id.main_dashboard_chart);
-        ArrayList<PieEntry> values = new ArrayList<>();
-        chart.setUsePercentValues(true);
-        chart.getDescription().setEnabled(false);
-        chart.setTouchEnabled(false);
-        chart.setTransparentCircleRadius(0f);
-        chart.setExtraOffsets(0, 0, 0, 0);
-        chart.setDrawSliceText(false);
-        chart.setDrawHoleEnabled(true);
-        chart.setHoleRadius(90f);
-        chart.setHoleColor(getResources().getColor(R.color.colorWhite));
-        chart.getLegend().setEnabled(false);
-        values.add(new PieEntry(34f, "partA"));
-        values.add(new PieEntry(25f, "partB"));
-        PieDataSet dataSet = new PieDataSet(values, "Data");
-        dataSet.setSliceSpace(0f);
-        dataSet.setColors(getResources().getColor(R.color.colorRedForChart), getResources().getColor(R.color.colorBlueForChart));
-        PieData data = new PieData(dataSet);
-        data.setValueTextSize(0f);
-        chart.setData(data);
         findViewById(R.id.main_dashboard_analisys).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +112,51 @@ public class MainActivity extends AppCompatActivity {
                 getLayoutByIndex(2);
             }
         });
+        PieChart chart = findViewById(R.id.main_dashboard_chart);
+        if (UserService.isConnected) {
+            ArrayList<PieEntry> values = new ArrayList<>();
+            chart.setUsePercentValues(true);
+            chart.getDescription().setEnabled(false);
+            chart.setTouchEnabled(false);
+            chart.setTransparentCircleRadius(0f);
+            chart.setExtraOffsets(0, 0, 0, 0);
+            chart.setDrawSliceText(false);
+            chart.setDrawHoleEnabled(true);
+            chart.setHoleRadius(90f);
+            chart.setHoleColor(getResources().getColor(R.color.colorWhite));
+            chart.getLegend().setEnabled(false);
+            values.add(new PieEntry(34f, "partA"));
+            values.add(new PieEntry(25f, "partB"));
+            PieDataSet dataSet = new PieDataSet(values, "Data");
+            dataSet.setSliceSpace(0f);
+            dataSet.setColors(getResources().getColor(R.color.colorRedForChart), getResources().getColor(R.color.colorBlueForChart));
+            PieData data = new PieData(dataSet);
+            data.setValueTextSize(0f);
+            chart.setData(data);
+            ((TextView)findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorBlueForChart));
+            ((TextView)findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
+        } else {
+            ArrayList<PieEntry> values = new ArrayList<>();
+            chart.setUsePercentValues(true);
+            chart.getDescription().setEnabled(false);
+            chart.setTouchEnabled(false);
+            chart.setTransparentCircleRadius(0f);
+            chart.setExtraOffsets(0, 0, 0, 0);
+            chart.setDrawSliceText(false);
+            chart.setDrawHoleEnabled(true);
+            chart.setHoleRadius(90f);
+            chart.setHoleColor(getResources().getColor(R.color.colorWhite));
+            chart.getLegend().setEnabled(false);
+            values.add(new PieEntry(1f, "no data"));
+            PieDataSet dataSet = new PieDataSet(values, "Data");
+            dataSet.setSliceSpace(0f);
+            dataSet.setColors(getResources().getColor(R.color.colorWhiteDark));
+            PieData data = new PieData(dataSet);
+            data.setValueTextSize(0f);
+            chart.setData(data);
+            ((TextView)findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorWhiteDark));
+            ((TextView)findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.GONE);
+        }
         //main_setting setting
         if (UserService.isConnected) {
             ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
