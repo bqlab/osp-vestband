@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import java.nio.InvalidMarkException;
+
 public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +67,13 @@ public class LoginActivity extends AppCompatActivity {
                                 }).show();
                     } else {
                         if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("first", true)) {
-                            startActivity(new Intent(LoginActivity.this, InitialActivity.class));
-                            finish();
+                            Intent i = new Intent(new Intent(LoginActivity.this, InitialActivity.class));
+                            i.putExtra("id", id);
+                            startActivity(i);
                         } else {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
+                            Intent i = new Intent(new Intent(LoginActivity.this, MainActivity.class));
+                            i.putExtra("id", id);
+                            startActivity(i);
                         }
                     }
                 }

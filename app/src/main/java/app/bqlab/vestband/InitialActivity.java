@@ -1,49 +1,38 @@
 package app.bqlab.vestband;
 
 import android.Manifest;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
-import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class InitialActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BLUETOOTH = 0;
     private static final int REQUEST_DISCOVERABLE = 1;
     private static final int ACCESS_COARSE_LOCATION = 2;
-    boolean isConnected = false;
     String id;
     android.support.v7.app.ActionBar actionBar;
     BluetoothSPP bluetoothSPP;
@@ -158,7 +147,7 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isConnected) {
+                if (BluetoothService.connected) {
                     bluetoothSPP.stopService();
                     thirdProgress();
                 }
@@ -167,9 +156,7 @@ public class InitialActivity extends AppCompatActivity {
         bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
-                isConnected = true;
-                getSharedPreferences("deviceName", MODE_PRIVATE).edit().putString(id, name).apply();
-                getSharedPreferences("deviceAddress", MODE_PRIVATE).edit().putString(id, address).apply();
+                BluetoothService.connected = true;
                 ((Button)findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
                 ((Button)findViewById(R.id.initial_second_button)).setBackground(getResources().getDrawable(R.drawable.app_button_black));
                 thirdProgress();
@@ -177,7 +164,7 @@ public class InitialActivity extends AppCompatActivity {
 
             @Override
             public void onDeviceDisconnected() {
-                isConnected = false;
+                BluetoothService.connected = false;
                 Log.d("Connection", "Disconnected");
                 new AlertDialog.Builder(InitialActivity.this)
                         .setMessage("디바이스와 연결할 수 없습니다.")
@@ -222,7 +209,7 @@ public class InitialActivity extends AppCompatActivity {
             secondProgress();
         } else if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE), REQUEST_DISCOVERABLE);
-        } else if (!isConnected) {
+        } else if (!BluetoothService.connected) {
             registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
             registerReceiver(broadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
             pairedDevices = bluetoothAdapter.getBondedDevices();
@@ -284,7 +271,7 @@ public class InitialActivity extends AppCompatActivity {
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                                startActivity(new Intent(new Intent(InitialActivity.this, MainActivity.class)));
                                 finish();
                             }
                         })
@@ -339,8 +326,7 @@ public class InitialActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 bluetoothSPP.stopService();
                                 InitialActivity.this.unregisterReceiver(broadcastReceiver);
-                                thirdProgress();
-                                //startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                                startActivity(new Intent(InitialActivity.this, MainActivity.class));
                             }
                         }).show();
             }

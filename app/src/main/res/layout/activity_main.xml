@@ -1628,6 +1628,7 @@
 
         <LinearLayout
             android:id="@+id/main_setting_version"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -1807,7 +1808,6 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/colorBlack"
-        android:visibility="gone"
         android:orientation="horizontal">
 
         <LinearLayout
