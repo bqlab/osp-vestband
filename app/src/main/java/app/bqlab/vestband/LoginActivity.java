@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void init() {
-        ((EditText)findViewById(R.id.login_id)).setText(getIntent().getStringExtra("id"));
+        ((EditText) findViewById(R.id.login_id)).setText(getIntent().getStringExtra("id"));
         findViewById(R.id.login_find).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,10 +67,10 @@ public class LoginActivity extends AppCompatActivity {
                                 }).show();
                     } else {
                         if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("first", true)) {
-                            startActivity( new Intent(new Intent(LoginActivity.this, InitialActivity.class)));
+                            startActivity(new Intent(LoginActivity.this, InitialActivity.class));
                             BluetoothService.id = id;
                         } else {
-                            startActivity( new Intent(new Intent(LoginActivity.this, MainActivity.class)));
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             BluetoothService.id = id;
                         }
                     }

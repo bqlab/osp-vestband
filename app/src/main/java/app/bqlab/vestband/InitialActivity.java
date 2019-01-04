@@ -313,6 +313,7 @@ public class InitialActivity extends AppCompatActivity {
                     if (device.getName().equals("Spine Up")) {
                         bluetoothAdapter.cancelDiscovery();
                         BluetoothService.device = device;
+                        getSharedPreferences("device", MODE_PRIVATE).edit().putString(BluetoothService.id, device.getAddress()).apply();
                         ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
                         bluetoothSPP.connect(BluetoothService.device.getAddress());
                         InitialActivity.this.unregisterReceiver(broadcastReceiver);
