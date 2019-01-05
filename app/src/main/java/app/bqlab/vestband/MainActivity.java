@@ -1,5 +1,6 @@
 package app.bqlab.vestband;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -33,12 +34,14 @@ import java.util.ArrayList;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
+import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BLUETOOTH = 0;
     private static final int REQUEST_DISCOVERABLE = 1;
     boolean isClickedBackbutton;
+    String totalTimeText, rightTimeText, badTimeText;
     BluetoothAdapter bluetoothAdapter;
     BluetoothSPP bluetoothSPP;
 
@@ -47,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        startService(new Intent(MainActivity.this, UserService.class));
         connectDevice();
     }
 
@@ -98,11 +100,15 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    @SuppressLint("SetTextI18n")
     private void init() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothSPP = new BluetoothSPP(MainActivity.this);
         UserService.right = getSharedPreferences("setting", MODE_PRIVATE).getInt("right", 0);
         UserService.bad = getSharedPreferences("setting", MODE_PRIVATE).getInt("bad", 0);
+        UserService.totalTime = getSharedPreferences("time", MODE_PRIVATE).getInt("total", 0);
+        UserService.rightTime = getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0);
+        UserService.badTime = getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0);
         ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -141,22 +147,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //main_dashboard setting
-        findViewById(R.id.main_dashboard_analisys).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getLayoutByIndex(1);
-            }
-        });
-        findViewById(R.id.main_dashboard_stretch).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getLayoutByIndex(2);
-            }
-        });
+
         PieChart chart = findViewById(R.id.main_dashboard_chart);
-        Log.d("total", String.valueOf(getSharedPreferences("time", MODE_PRIVATE).getInt("total", 0)));
-        Log.d("right", String.valueOf(getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0)));
-        Log.d("bad", String.valueOf(getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0)));
         if (getSharedPreferences("time", MODE_PRIVATE).getInt("total", 0) != 0) {
             ArrayList<PieEntry> values = new ArrayList<>();
             chart.setUsePercentValues(true);
@@ -177,8 +169,18 @@ public class MainActivity extends AppCompatActivity {
             PieData data = new PieData(dataSet);
             data.setValueTextSize(0f);
             chart.setData(data);
-            ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorBlueForChart));
-            ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
+            if (UserService.badTime < UserService.rightTime) {
+                ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorBlueForChart));
+                ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("GOOD");
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText("나쁜 자세 " + String.valueOf((double) UserService.badTime / (double) UserService.totalTime * 100) + "%");
+            } else {
+                ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorRedForChart));
+                ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("BAD");
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText("나쁜 자세 " + String.valueOf((int) ((double) UserService.badTime / (double) UserService.totalTime * 100)) + "%");
+            }
+            ((TextView) findViewById(R.id.main_dashboard_vibrate_content)).setText(String.valueOf(UserService.badTime) + "회");
         } else {
             ArrayList<PieEntry> values = new ArrayList<>();
             chart.setUsePercentValues(true);
@@ -201,9 +203,50 @@ public class MainActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorWhiteDark));
             ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.GONE);
         }
-        //main_analysis setting
-
-
+        if (UserService.totalTime > 3600)
+            totalTimeText = String.valueOf(UserService.totalTime / 3600) + "시간 " + String.valueOf((UserService.totalTime % 3600) / 60) + "분";
+        else
+            totalTimeText = String.valueOf((UserService.totalTime % 3600) / 60) + "분";
+        ((TextView) findViewById(R.id.main_dashboard_total_content)).setText(totalTimeText);
+        ((TextView) findViewById(R.id.main_analisys_vibrate_content)).setText(String.valueOf(UserService.badTime));
+        findViewById(R.id.main_dashboard_analisys).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(1);
+            }
+        });
+        findViewById(R.id.main_dashboard_stretch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(2);
+            }
+        });
+        //main_analisys setting -> analysis is correct expression
+        if (UserService.rightTime > 3600)
+            rightTimeText = String.valueOf(UserService.rightTime / 3600) + "시간 " + String.valueOf((UserService.rightTime % 3600) / 60) + "분";
+        else
+            rightTimeText = String.valueOf((UserService.rightTime % 3600) / 60) + "분";
+        if (UserService.badTime > 3600)
+            badTimeText = String.valueOf(UserService.badTime / 3600) + "시간 " + String.valueOf((UserService.badTime % 3600) / 60) + "분";
+        else
+            badTimeText = String.valueOf((UserService.badTime % 3600) / 60) + "분";
+        ((TextView) findViewById(R.id.main_analisys_time_content)).setText(String.valueOf(totalTimeText));
+        ((TextView) findViewById(R.id.main_analisys_vibrate_content)).setText(String.valueOf(UserService.badTime) + "회");
+        ((TextView) findViewById(R.id.main_analisys_right_content)).setText(rightTimeText);
+        ((TextView) findViewById(R.id.main_analisys_bad_content)).setText(badTimeText);
+        findViewById(R.id.main_analisys_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(0);
+            }
+        });
+        //main_stretch setting
+        findViewById(R.id.main_stretch_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(0);
+            }
+        });
         //main_setting setting
         if (UserService.isConnected) {
             ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
@@ -263,9 +306,9 @@ public class MainActivity extends AppCompatActivity {
         });
         //main_setting_connect setting
         if (UserService.isConnected)
-            ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
+            ((TextView) findViewById(R.id.main_setting_connect_state)).setText("연결 됨");
         else
-            ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
+            ((TextView) findViewById(R.id.main_setting_connect_state)).setText("연결 안됨");
         findViewById(R.id.main_setting_connect_top_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

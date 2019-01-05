@@ -42,7 +42,6 @@ public class UserService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        init();
         isVersionOverOreo();
         String content = intent.getStringExtra("content");
         Intent i = new Intent(this, MainActivity.class);
@@ -63,7 +62,7 @@ public class UserService extends Service {
                         Log.d("Degree", Integer.toString(degree));
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
-                        return; 
+                        return;
                     }
                 }
             }
@@ -80,15 +79,6 @@ public class UserService extends Service {
 
     public void test() {
         degree = new Random().nextInt(180) - 90;
-    }
-
-    private void init() {
-        isConnected = true; //test
-        right = 0; //test
-        bad = 45; //test
-        totalTime = getSharedPreferences("time", MODE_PRIVATE).getInt("total", 0);
-        rightTime = getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0);
-        badTime = getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0);
     }
 
     public void isVersionOverOreo() {
