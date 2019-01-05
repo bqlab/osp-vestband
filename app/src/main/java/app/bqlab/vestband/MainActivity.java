@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
         ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                UserService.thread.interrupt();
                 finish();
-                UserService.isConnected = false;
                 overridePendingTransition(0, 0);
                 startActivity(getIntent());
                 overridePendingTransition(0, 0);
@@ -154,7 +154,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         PieChart chart = findViewById(R.id.main_dashboard_chart);
-        if (UserService.isConnected) {
+        Log.d("total", String.valueOf(getSharedPreferences("time", MODE_PRIVATE).getInt("total", 0)));
+        Log.d("right", String.valueOf(getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0)));
+        Log.d("bad", String.valueOf(getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0)));
+        if (getSharedPreferences("time", MODE_PRIVATE).getInt("total", 0) != 0) {
             ArrayList<PieEntry> values = new ArrayList<>();
             chart.setUsePercentValues(true);
             chart.getDescription().setEnabled(false);
@@ -166,8 +169,8 @@ public class MainActivity extends AppCompatActivity {
             chart.setHoleRadius(90f);
             chart.setHoleColor(getResources().getColor(R.color.colorWhite));
             chart.getLegend().setEnabled(false);
-            values.add(new PieEntry(UserService.badTime, "bad"));
-            values.add(new PieEntry(UserService.rightTime, "right"));
+            values.add(new PieEntry(getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0), "bad"));
+            values.add(new PieEntry(getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0)));
             PieDataSet dataSet = new PieDataSet(values, "Data");
             dataSet.setSliceSpace(0f);
             dataSet.setColors(getResources().getColor(R.color.colorRedForChart), getResources().getColor(R.color.colorBlueForChart));
