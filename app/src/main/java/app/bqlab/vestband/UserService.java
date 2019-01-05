@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -17,12 +18,11 @@ import android.util.Log;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
 public class UserService extends Service {
-    NotificationManager notificationManager;
-    NotificationChannel notificationChannel;
-
     public static String id;
-    public static int degree = 0;
-    public static boolean isConnected = false;
+    public static int degree, right, bad, rightTime, badTime;
+    public static boolean isConnected, isNotified;
+    public static NotificationManager notificationManager;
+    public static NotificationChannel notificationChannel;
     public static BluetoothDevice device;
 
     @Override
@@ -38,6 +38,8 @@ public class UserService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        isVersionOverOreo();
+
         String content = intent.getStringExtra("content");
         Intent i = new Intent(this, MainActivity.class);
         PendingIntent p = PendingIntent.getActivity(this, 0, i, 0);
@@ -50,17 +52,13 @@ public class UserService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    while (isConnected) {
-                        Thread.sleep(2000);
-                        Log.d("Degree", Integer.toString(degree));
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while (isConnected) {
+                    isAngleCorrect(UserService.degree);
+                    Log.d("Degree", Integer.toString(degree));
                 }
             }
         }).start();
-        return START_NOT_STICKY ;
+        return START_NOT_STICKY;
     }
 
     @Nullable
@@ -69,7 +67,7 @@ public class UserService extends Service {
         return null;
     }
 
-    public void checkAndroidVersion() {
+    public void isVersionOverOreo() {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationChannel = new NotificationChannel("em", "긴급알림", NotificationManager.IMPORTANCE_DEFAULT);
@@ -80,6 +78,35 @@ public class UserService extends Service {
             notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             notificationManager.createNotificationChannel(notificationChannel);
         }
+    }
+
+    public void isAngleCorrect(int degree) {
+        if (degree > right - 10 && degree < right + 10) {
+            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("right", rightTime++).apply();
+            rightTime = getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0);
+            Log.d("Good", Integer.toString(rightTime));
+        }
+        if (degree > bad - 10 && degree < bad + 10) {
+            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("bad", rightTime++).apply();
+            badTime = getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0);
+            Log.d("Bad", Integer.toString(badTime));
+            if (!isNotified) {
+                new CountDownTimer(getSharedPreferences("setting", MODE_PRIVATE).getInt("notifyTime", 0) * 1000, 1000) {
+
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        makeNotification();
+                        isNotified = true;
+                    }
+                }.start();
+            }
+        } else
+            isNotified = false;
     }
 
     public void makeNotification() {

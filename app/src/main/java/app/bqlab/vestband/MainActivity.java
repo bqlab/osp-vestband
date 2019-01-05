@@ -34,11 +34,10 @@ import java.util.ArrayList;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 
-public class MainActivity extends AppCompatActivity implements Runnable {
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BLUETOOTH = 0;
     private static final int REQUEST_DISCOVERABLE = 1;
-    int rightTime, badTime, bad, right;
     boolean isClickedBackbutton;
     BluetoothAdapter bluetoothAdapter;
     BluetoothSPP bluetoothSPP;
@@ -98,28 +97,11 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         }.start();
     }
 
-    @Override
-    public void run() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (UserService.isConnected) {
-                    try {
-                        Thread.sleep(1000);
-                        isAngleCorrect(UserService.degree);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }
-
     private void init() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothSPP = new BluetoothSPP(MainActivity.this);
-        right = getSharedPreferences("setting", MODE_PRIVATE).getInt("right", 0);
-        bad = getSharedPreferences("setting", MODE_PRIVATE).getInt("bad", 0);
+        UserService.right = getSharedPreferences("setting", MODE_PRIVATE).getInt("right", 0);
+        UserService.bad = getSharedPreferences("setting", MODE_PRIVATE).getInt("bad", 0);
         ((SwipeRefreshLayout)findViewById(R.id.main_refresh_layout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -182,8 +164,8 @@ public class MainActivity extends AppCompatActivity implements Runnable {
             chart.setHoleRadius(90f);
             chart.setHoleColor(getResources().getColor(R.color.colorWhite));
             chart.getLegend().setEnabled(false);
-            values.add(new PieEntry(badTime, "bad"));
-            values.add(new PieEntry(rightTime, "right"));
+            values.add(new PieEntry(UserService.badTime, "bad"));
+            values.add(new PieEntry(UserService.rightTime, "right"));
             PieDataSet dataSet = new PieDataSet(values, "Data");
             dataSet.setSliceSpace(0f);
             dataSet.setColors(getResources().getColor(R.color.colorRedForChart), getResources().getColor(R.color.colorBlueForChart));
@@ -302,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ((TextView) findViewById(R.id.main_setting_notify_notify_time)).setText(s[which]);
-                                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", which).apply();
+                                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", which*5).apply();
                             }
                         }).show();
 
@@ -474,19 +456,6 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                     ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_p));
                     break;
             }
-        }
-    }
-
-    private void isAngleCorrect(int degree) {
-        if (degree > right - 10 && degree < right + 10) {
-            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("right", rightTime++).apply();
-            rightTime = getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0);
-            Log.d("Good", Integer.toString(rightTime));
-        }
-        if (degree > bad - 10 && degree < bad + 10) {
-            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("bad", rightTime++).apply();
-            badTime = getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0);
-            Log.d("Bad", Integer.toString(badTime));
         }
     }
 
