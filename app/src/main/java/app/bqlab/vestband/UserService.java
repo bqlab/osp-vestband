@@ -57,7 +57,6 @@ public class UserService extends Service {
             public void run() {
                 while (isConnected) {
                     try {
-                        test();
                         isAngleCorrect(UserService.degree);
                         Log.d("Degree", Integer.toString(degree));
                         Thread.sleep(1000);
@@ -77,9 +76,9 @@ public class UserService extends Service {
         return null;
     }
 
-    public void test() {
-        degree = new Random().nextInt(180) - 90;
-    }
+//    public void test() {
+//        degree = new Random().nextInt(180) - 90;
+//    }
 
     public void isVersionOverOreo() {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

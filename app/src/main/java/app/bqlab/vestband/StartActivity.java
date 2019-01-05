@@ -47,13 +47,13 @@ public class StartActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
         }
-        findViewById(R.id.start_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, InitialActivity.class));
-                getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
-            }
-        });
+//        findViewById(R.id.start_image).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(StartActivity.this, InitialActivity.class));
+//                getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
+//            }
+//        });
         findViewById(R.id.start_register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -238,7 +238,6 @@ public class InitialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("right", UserService.degree).apply();
-                Log.d("Right", Integer.toString(UserService.degree));
                 fourthProgress();
             }
         });
@@ -257,7 +256,6 @@ public class InitialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("bad", UserService.degree).apply();
-                Log.d("Bad", Integer.toString(UserService.degree));
                 fifthProgress();
             }
         });
@@ -286,7 +284,6 @@ public class InitialActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 int notifyTime = numberPicker.getValue() * 5;
-                                Log.d("notifyTime", Integer.toString(notifyTime));
                                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", notifyTime).apply();
                                 if (!getIntent().getBooleanExtra("thirdProgress", false))
                                     startActivity(new Intent(InitialActivity.this, MainActivity.class));
