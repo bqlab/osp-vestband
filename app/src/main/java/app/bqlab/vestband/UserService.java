@@ -23,7 +23,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
 public class UserService extends Service {
     public static String id;
-    public static int degree, right, bad, rightTime, badTime;
+    public static int degree, right, bad, rightTime, badTime, totalTime;
     public static boolean isConnected, isNotified;
     public static NotificationManager notificationManager;
     public static NotificationChannel notificationChannel;
@@ -96,6 +96,8 @@ public class UserService extends Service {
     }
 
     public void isAngleCorrect(int degree) {
+        totalTime = getSharedPreferences("time", MODE_PRIVATE).getInt("total", 0) + 1;
+        getSharedPreferences("time", MODE_PRIVATE).edit().putInt("total", totalTime).apply();
         if (degree > right - 10 && degree < right + 10) {
             rightTime = getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0) + 1;
             getSharedPreferences("time", MODE_PRIVATE).edit().putInt("right", rightTime).apply();
@@ -107,6 +109,7 @@ public class UserService extends Service {
             Log.d("Bad", Integer.toString(badTime));
             try {
                 Thread.sleep(getSharedPreferences("setting", MODE_PRIVATE).getInt("notifyTime", 0) * 1000);
+                getSharedPreferences("time", MODE_PRIVATE).edit().putInt("vibrate", badTime).apply();
                 makeNotification();
             } catch (InterruptedException e) {
                 e.printStackTrace();

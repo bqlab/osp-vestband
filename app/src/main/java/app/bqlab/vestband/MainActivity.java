@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 finish();
+                UserService.isConnected = false;
                 overridePendingTransition(0, 0);
                 startActivity(getIntent());
                 overridePendingTransition(0, 0);
@@ -197,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorWhiteDark));
             ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.GONE);
         }
+        //main_analysis setting
+
+
         //main_setting setting
         if (UserService.isConnected) {
             ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
