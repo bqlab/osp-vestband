@@ -155,7 +155,7 @@ public class InitialActivity extends AppCompatActivity {
         bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             @Override
             public void onDataReceived(byte[] data, String message) {
-                UserService.degree = Integer.parseInt(message);
+                UserService.degree = Integer.parseInt(message) - 90;
             }
         });
         bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {

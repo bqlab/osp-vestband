@@ -10,10 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import java.util.Random;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
@@ -28,7 +32,6 @@ public class UserService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
     }
 
     @Override
@@ -38,8 +41,10 @@ public class UserService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        isConnected = true; //test
+        right = 0; //test
+        bad = 45; //test
         isVersionOverOreo();
-
         String content = intent.getStringExtra("content");
         Intent i = new Intent(this, MainActivity.class);
         PendingIntent p = PendingIntent.getActivity(this, 0, i, 0);
@@ -53,8 +58,14 @@ public class UserService extends Service {
             @Override
             public void run() {
                 while (isConnected) {
-                    isAngleCorrect(UserService.degree);
-                    Log.d("Degree", Integer.toString(degree));
+                    try {
+                        Thread.sleep(1000);
+                        test();
+                        isAngleCorrect(UserService.degree);
+                        Log.d("Degree", Integer.toString(degree));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();
@@ -65,6 +76,10 @@ public class UserService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public void test() {
+        degree = new Random().nextInt(180) - 90;
     }
 
     public void isVersionOverOreo() {
@@ -82,34 +97,26 @@ public class UserService extends Service {
 
     public void isAngleCorrect(int degree) {
         if (degree > right - 10 && degree < right + 10) {
-            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("right", rightTime++).apply();
-            rightTime = getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0);
+            rightTime = getSharedPreferences("time", MODE_PRIVATE).getInt("right", 0) + 1;
+            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("right", rightTime).apply();
             Log.d("Good", Integer.toString(rightTime));
         }
         if (degree > bad - 10 && degree < bad + 10) {
-            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("bad", rightTime++).apply();
-            badTime = getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0);
+            badTime = getSharedPreferences("time", MODE_PRIVATE).getInt("bad", 0) + 1;
+            getSharedPreferences("time", MODE_PRIVATE).edit().putInt("bad", badTime).apply();
             Log.d("Bad", Integer.toString(badTime));
-            if (!isNotified) {
-                new CountDownTimer(getSharedPreferences("setting", MODE_PRIVATE).getInt("notifyTime", 0) * 1000, 1000) {
-
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        makeNotification();
-                        isNotified = true;
-                    }
-                }.start();
+            try {
+                Thread.sleep(getSharedPreferences("setting", MODE_PRIVATE).getInt("notifyTime", 0) * 1000);
+                makeNotification();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         } else
             isNotified = false;
     }
 
     public void makeNotification() {
+        Log.d("Bad", "Warning!!");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.notify(0, new NotificationCompat.Builder(this, "em")
                     .setSmallIcon(R.mipmap.ic_launcher)
