@@ -309,7 +309,7 @@ public class InitialActivity extends AppCompatActivity {
                 try {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     Log.d("Discovery", device.getName());
-                    if (device.getName().equals("Spine Up")) {
+                    if (device.getName().equals("SpineUp")) {
                         bluetoothAdapter.cancelDiscovery();
                         UserService.device = device;
                         ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));

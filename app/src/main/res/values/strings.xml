@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">vestband</string>
+    <string name="app_name">SpineUp</string>
     <string name="app_no_data">no_data</string>
 
     <string name="login_login">LOG IN</string>

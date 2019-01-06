@@ -520,7 +520,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     Log.d("Discovery", device.getName());
-                    if (device.getName().equals("Spine Up")) {
+                    if (device.getName().equals("SpineUp")) {
                         bluetoothAdapter.cancelDiscovery();
                         UserService.device = device;
                         bluetoothSPP.connect(UserService.device.getAddress());
