@@ -425,6 +425,24 @@ public class MainActivity extends AppCompatActivity {
                     UserService.isConnected = true;
                     startService(new Intent(MainActivity.this, UserService.class));
                     Toast.makeText(MainActivity.this, "연결되었습니다.", Toast.LENGTH_LONG).show();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.sleep(1000);
+                                        while (UserService.isConnected) {
+                                            Toast.makeText(MainActivity.this, String.valueOf(UserService.degree), Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    }).start();
                 }
 
                 @Override
