@@ -77,10 +77,6 @@ public class UserService extends Service {
         return null;
     }
 
-//    public void test() {
-//        degree = new Random().nextInt(180) - 90;
-//    }
-
     public void isVersionOverOreo() {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

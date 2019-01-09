@@ -3,6 +3,7 @@ package app.bqlab.vestband;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -226,6 +227,7 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void thirdProgress() {
+        UserService.isConnected = false;
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
         ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
@@ -285,8 +287,10 @@ public class InitialActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 int notifyTime = numberPicker.getValue() * 5;
                                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", notifyTime).apply();
-                                if (!getIntent().getBooleanExtra("thirdProgress", false))
+                                if (!getIntent().getBooleanExtra("thirdProgress", false)) {
                                     startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                                    UserService.isConnected = true;
+                                }
                                 finish();
                             }
                         })
