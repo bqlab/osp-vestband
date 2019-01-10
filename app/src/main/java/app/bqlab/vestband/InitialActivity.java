@@ -2,7 +2,9 @@ package app.bqlab.vestband;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -25,6 +27,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Objects;
 import java.util.Set;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
@@ -49,6 +52,16 @@ public class InitialActivity extends AppCompatActivity {
             thirdProgress();
         else
             firstProgress();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent mStartActivity = new Intent(this, LoginActivity.class);
+        PendingIntent mPendingIntent = PendingIntent.getActivity(this, 0,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager a = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        Objects.requireNonNull(a).set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
     }
 
     @Override
@@ -240,6 +253,7 @@ public class InitialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("right", UserService.degree).apply();
+                Log.d("SetRight", String.valueOf(UserService.degree));
                 fourthProgress();
             }
         });
@@ -258,6 +272,7 @@ public class InitialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("bad", UserService.degree).apply();
+                Log.d("SetBad", String.valueOf(UserService.degree));
                 fifthProgress();
             }
         });
@@ -289,7 +304,6 @@ public class InitialActivity extends AppCompatActivity {
                                 getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", notifyTime).apply();
                                 if (!getIntent().getBooleanExtra("thirdProgress", false)) {
                                     startActivity(new Intent(InitialActivity.this, MainActivity.class));
-                                    UserService.isConnected = true;
                                 }
                                 finish();
                             }
@@ -302,7 +316,9 @@ public class InitialActivity extends AppCompatActivity {
                         }).show();
             }
         });
+        Toast.makeText(this, "설정을 저장하기 위해 재시작합니다.", Toast.LENGTH_LONG).show();
         getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
+        finish();
     }
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {

@@ -112,13 +112,7 @@ public class MainActivity extends AppCompatActivity {
         ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                UserService.thread.interrupt();
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);
-                Toast.makeText(MainActivity.this, "새로고침이 완료되었습니다.", Toast.LENGTH_LONG).show();
-                ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setRefreshing(false);
+                refresh();
             }
         });
         //main_bar setting
@@ -173,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorBlueForChart));
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("GOOD");
                 ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText("나쁜 자세 " + String.valueOf((double) UserService.badTime / (double) UserService.totalTime * 100) + "%");
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText("나쁜 자세 " + String.valueOf((int) ((double) UserService.badTime / (double) UserService.totalTime * 100)) + "%");
             } else {
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorRedForChart));
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("BAD");
@@ -409,70 +403,75 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void refresh() {
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(getIntent());
+        overridePendingTransition(0, 0);
+        Toast.makeText(MainActivity.this, "새로고침이 완료되었습니다.", Toast.LENGTH_LONG).show();
+        ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setRefreshing(false);
+    }
+
     private void connectDevice() {
         if (!UserService.isConnected) {
-            Toast.makeText(this, "장치와 연결되어 있지 않습니다.", Toast.LENGTH_LONG).show();
-
-            bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-                @Override
-                public void onDataReceived(byte[] data, String message) {
-                    UserService.degree = Integer.parseInt(message) - 90;
-                }
-            });
-            bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
-                @Override
-                public void onDeviceConnected(String name, String address) {
-                    UserService.isConnected = true;
-                    startService(new Intent(MainActivity.this, UserService.class));
-                    Toast.makeText(MainActivity.this, "연결되었습니다.", Toast.LENGTH_LONG).show();
-                    new Thread(new Runnable() {
+            new AlertDialog.Builder(this)
+                    .setMessage("장치와 연결되어 있지 않습니다.")
+                    .setCancelable(false)
+                    .setPositiveButton("연결", new DialogInterface.OnClickListener() {
                         @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
                                 @Override
-                                public void run() {
+                                public void onDataReceived(byte[] data, String message) {
+                                    UserService.degree = Integer.parseInt(message) - 90;
+                                    Log.d("Degree", String.valueOf(UserService.degree));
+                                }
+                            });
+                            bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+                                @Override
+                                public void onDeviceConnected(String name, String address) {
+                                    UserService.isConnected = true;
+                                    startService(new Intent(MainActivity.this, UserService.class));
+                                    Toast.makeText(MainActivity.this, "연결되었습니다.", Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onDeviceDisconnected() {
                                     try {
-                                        Thread.sleep(1000);
-                                        while (UserService.isConnected) {
-                                            Toast.makeText(MainActivity.this, String.valueOf(UserService.degree), Toast.LENGTH_LONG).show();
-                                        }
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
+                                        UserService.isConnected = false;
+                                        new AlertDialog.Builder(MainActivity.this)
+                                                .setMessage("디바이스와 연결할 수 없습니다.")
+                                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                    } catch (Exception e) {
+                                        Toast.makeText(MainActivity.this, "디바이스와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onDeviceConnectionFailed() {
+                                    try {
+                                        UserService.isConnected = false;
+                                        new AlertDialog.Builder(MainActivity.this)
+                                                .setMessage("디바이스와 연결할 수 없습니다.")
+                                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                    } catch (Exception e) {
+                                        Toast.makeText(MainActivity.this, "디바이스와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
+                            searchDevice();
                         }
-                    }).start();
-                }
-
-                @Override
-                public void onDeviceDisconnected() {
-                    UserService.isConnected = false;
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setMessage("디바이스와 연결할 수 없습니다.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                }
-
-                @Override
-                public void onDeviceConnectionFailed() {
-                    UserService.isConnected = false;
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setMessage("디바이스와 연결할 수 없습니다.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                }
-            });
-            if (!UserService.isConnected)
-                searchDevice();
+                    }).show();
         }
     }
 
