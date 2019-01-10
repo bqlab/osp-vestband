@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="app.bqlab.vestband">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -39,7 +40,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppThemeNoActionBar" />
-        <service android:name=".BluetoothService"/>
+        <service android:name=".UserService"/>
     </application>
 
 </manifest>

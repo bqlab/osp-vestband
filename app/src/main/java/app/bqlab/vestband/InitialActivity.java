@@ -3,6 +3,7 @@ package app.bqlab.vestband;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +45,10 @@ public class InitialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
         init();
-        firstProgress();
+        if (getIntent().getBooleanExtra("thirdProgress", false))
+            thirdProgress();
+        else
+            firstProgress();
     }
 
     @Override
@@ -56,12 +61,10 @@ public class InitialActivity extends AppCompatActivity {
                     break;
                 case REQUEST_DISCOVERABLE:
                     Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
-                    Log.d("Discoverable", Integer.toString(bluetoothAdapter.getScanMode()));
                     firstProgress();
                     break;
                 case ACCESS_COARSE_LOCATION:
                     Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
-                    Log.d("Discoverable", Integer.toString(bluetoothAdapter.getScanMode()));
                     firstProgress();
             }
         } else {
@@ -92,7 +95,7 @@ public class InitialActivity extends AppCompatActivity {
     private void firstProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_first_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_first_title));
         findViewById(R.id.initial_first).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -135,7 +138,7 @@ public class InitialActivity extends AppCompatActivity {
     private void secondProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -144,24 +147,31 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BluetoothService.isConnected) {
+                if (UserService.isConnected) {
                     bluetoothSPP.stopService();
                     thirdProgress();
                 }
             }
         });
+        bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+            @Override
+            public void onDataReceived(byte[] data, String message) {
+                UserService.degree = Integer.parseInt(message) - 90;
+            }
+        });
         bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
-                BluetoothService.isConnected = true;
-                ((Button)findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
-                ((Button)findViewById(R.id.initial_second_button)).setBackground(getResources().getDrawable(R.drawable.app_button_black));
+                UserService.isConnected = true;
+                startService(new Intent(InitialActivity.this, UserService.class));
+                ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
+                ((Button) findViewById(R.id.initial_second_button)).setBackground(getResources().getDrawable(R.drawable.app_button_black));
                 thirdProgress();
             }
 
             @Override
             public void onDeviceDisconnected() {
-                BluetoothService.isConnected = false;
+                UserService.isConnected = false;
                 Log.d("Connection", "Disconnected");
                 new AlertDialog.Builder(InitialActivity.this)
                         .setMessage("디바이스와 연결할 수 없습니다.")
@@ -206,7 +216,7 @@ public class InitialActivity extends AppCompatActivity {
             secondProgress();
         } else if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE), REQUEST_DISCOVERABLE);
-        } else if (!BluetoothService.isConnected) {
+        } else if (!UserService.isConnected) {
             registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
             registerReceiver(broadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
             pairedDevices = bluetoothAdapter.getBondedDevices();
@@ -217,9 +227,10 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void thirdProgress() {
+        UserService.isConnected = false;
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.VISIBLE);
@@ -228,6 +239,7 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("right", UserService.degree).apply();
                 fourthProgress();
             }
         });
@@ -236,7 +248,7 @@ public class InitialActivity extends AppCompatActivity {
     private void fourthProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fourth_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fourth_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
@@ -245,6 +257,7 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_fourth_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("bad", UserService.degree).apply();
                 fifthProgress();
             }
         });
@@ -253,12 +266,16 @@ public class InitialActivity extends AppCompatActivity {
     private void fifthProgress() {
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.initial_actionbar);
-        ((TextView)findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fifth_title));
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fifth_title));
         findViewById(R.id.initial_first).setVisibility(View.GONE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);
         findViewById(R.id.initial_third).setVisibility(View.GONE);
         findViewById(R.id.initial_fourth).setVisibility(View.GONE);
         findViewById(R.id.initial_fifth).setVisibility(View.VISIBLE);
+        final NumberPicker numberPicker = findViewById(R.id.initial_fifth_picker);
+        numberPicker.setMaxValue(2);
+        numberPicker.setMinValue(0);
+        numberPicker.setDisplayedValues(new String[]{"즉시", "5초", "10초"});
         findViewById(R.id.initial_fifth_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,7 +285,12 @@ public class InitialActivity extends AppCompatActivity {
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(new Intent(InitialActivity.this, MainActivity.class)));
+                                int notifyTime = numberPicker.getValue() * 5;
+                                getSharedPreferences("setting", MODE_PRIVATE).edit().putInt("notifyTime", notifyTime).apply();
+                                if (!getIntent().getBooleanExtra("thirdProgress", false)) {
+                                    startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                                    UserService.isConnected = true;
+                                }
                                 finish();
                             }
                         })
@@ -291,11 +313,11 @@ public class InitialActivity extends AppCompatActivity {
                 try {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     Log.d("Discovery", device.getName());
-                    if (device.getName().equals("Spine Up")) {
+                    if (device.getName().equals("SpineUp")) {
                         bluetoothAdapter.cancelDiscovery();
-                        BluetoothService.device = device;
+                        UserService.device = device;
                         ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
-                        bluetoothSPP.connect(BluetoothService.device.getAddress());
+                        bluetoothSPP.connect(UserService.device.getAddress());
                         InitialActivity.this.unregisterReceiver(broadcastReceiver);
                     }
                 } catch (Exception e) {

@@ -2,7 +2,9 @@
 <resources>
     <color name="colorNavy">#132735</color>
     <color name="colorBlue">#007aff</color>
+    <color name="colorBlueForChart">#3d85c6</color>
     <color name="colorRed">#ff0000</color>
+    <color name="colorRedForChart">#ff4646</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhiteDark">#d9d9d9</color>
     <color name="colorWhiteDarker">#c8c8c8</color>

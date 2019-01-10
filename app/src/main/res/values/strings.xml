@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">vestband</string>
+    <string name="app_name">SpineUp</string>
     <string name="app_no_data">no_data</string>
 
     <string name="login_login">LOG IN</string>
@@ -68,7 +68,7 @@
     <string name="main_analisys_top_title">일일 자세 리포트</string>
     <string name="main_analisys_top_date">2019&#8211;01&#8211;01 ~ 2019&#8211;01&#8211;01</string>
     <string name="main_analisys_time_title">착용시간</string>
-    <string name="main_analisys_time_default">0번</string>
+    <string name="main_analisys_time_default">0분</string>
     <string name="main_analisys_vibrate_default">0회</string>
     <string name="main_analisys_vibrate_title">진동횟수</string>
     <string name="main_analisys_right_title">바른 자세</string>
@@ -98,7 +98,7 @@
     <string name="main_setting_connect_battery">배터리</string>
     <string name="main_setting_connect_battery_default">0%</string>
     <string name="main_setting_connect_firmware">펌웨어 버전</string>
-    <string name="main_setting_connect_firmware_default">v0.0</string>
+    <string name="main_setting_connect_firmware_default">v1.0</string>
     <string name="main_setting_notify_top_title">진동 알림 설정</string>
     <string name="main_setting_notify_time_title">알림 시간 설정</string>
     <string name="main_setting_notify_time_default">즉시 &gt;</string>

@@ -1,6 +1,8 @@
 package app.bqlab.vestband;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -29,10 +31,17 @@ public class PwsearchLayout extends LinearLayout {
             @Override
             public void onClick(View v) {
                 String id = ((EditText) findViewById(R.id.pwsearch_email)).getText().toString();
-                if (Objects.equals(getContext().getSharedPreferences("idpw", Context.MODE_PRIVATE).getString(id, "none"), "none") || !id.contains("e"))
+                if (Objects.equals(getContext().getSharedPreferences("idpw", Context.MODE_PRIVATE).getString(id, "none"), "none"))
                     Toast.makeText(getContext(), "이메일을 다시 확인하세요.", Toast.LENGTH_LONG).show();
                 else {
-                    Toast.makeText(getContext(), "안내 메일을 발송했습니다.", Toast.LENGTH_LONG).show();
+                    new AlertDialog.Builder(getContext())
+                            .setMessage("안내 메일을 전송할 수 없습니다.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
                     close();
                 }
             }
