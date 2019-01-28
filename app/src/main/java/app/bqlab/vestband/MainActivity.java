@@ -424,7 +424,8 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataReceived(byte[] data, String message) {
                                     UserService.degree = Integer.parseInt(message) - 90;
-                                    Log.d("Degree", String.valueOf(UserService.degree));
+                                    if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("developer", false))
+                                        Toast.makeText(MainActivity.this, String.valueOf(UserService.degree), Toast.LENGTH_SHORT).show();
                                 }
                             });
                             bluetoothSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
