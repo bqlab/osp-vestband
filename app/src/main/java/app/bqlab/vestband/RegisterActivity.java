@@ -59,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final DatePicker datePicker = new DatePicker(RegisterActivity.this);
+                datePicker.setCalendarViewShown(false);
                 new AlertDialog.Builder(RegisterActivity.this)
                         .setView(datePicker)
                         .setCancelable(false)

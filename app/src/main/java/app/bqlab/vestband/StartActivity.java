@@ -2,6 +2,7 @@ package app.bqlab.vestband;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
@@ -13,7 +14,8 @@ import android.widget.Toast;
 
 public class StartActivity extends AppCompatActivity {
 
-    boolean isClickedBackbutton;
+    boolean mBackClickDelay = false;
+    SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +26,9 @@ public class StartActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!isClickedBackbutton) {
+        if (!mBackClickDelay) {
             Toast.makeText(this, "한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
-            isClickedBackbutton = true;
+            mBackClickDelay = true;
         } else {
             super.onBackPressed();
             ActivityCompat.finishAffinity(this);
@@ -38,22 +40,31 @@ public class StartActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                isClickedBackbutton = false;
+                mBackClickDelay = false;
             }
         }.start();
     }
 
     private void init() {
+        mPreferences = getSharedPreferences("setting", MODE_PRIVATE);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
         }
-//        findViewById(R.id.start_image).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(StartActivity.this, InitialActivity.class));
-//                getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
-//            }
-//        });
+        findViewById(R.id.start_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
+                startActivity(new Intent(StartActivity.this, InitialActivity.class));
+            }
+        });
+        findViewById(R.id.start_image).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(StartActivity.this, "개발자 모드 : " + Boolean.toString(mPreferences.getBoolean("developer", false)), Toast.LENGTH_LONG).show();
+                mPreferences.edit().putBoolean("developer", !mPreferences.getBoolean("developer", false)).apply();
+                return true;
+            }
+        });
         findViewById(R.id.start_register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -17,6 +17,7 @@
         <item name="colorPrimaryDark">@color/colorNavy</item>
         <item name="colorAccent">@color/colorBlue</item>
         <item name="dialogTheme">@style/MyDialogTheme</item>
+        <item name="android:datePickerStyle">@style/MyDatePicker</item>
     </style>
 
     <style name="MyDialogTheme" parent="android:Theme.Material.Dialog">
