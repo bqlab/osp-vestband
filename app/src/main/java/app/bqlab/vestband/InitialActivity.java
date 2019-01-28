@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -52,16 +53,6 @@ public class InitialActivity extends AppCompatActivity {
             thirdProgress();
         else
             firstProgress();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Intent mStartActivity = new Intent(this, LoginActivity.class);
-        PendingIntent mPendingIntent = PendingIntent.getActivity(this, 0,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager a = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-        Objects.requireNonNull(a).set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-        System.exit(0);
     }
 
     @Override
@@ -316,9 +307,19 @@ public class InitialActivity extends AppCompatActivity {
                         }).show();
             }
         });
-        Toast.makeText(this, "설정을 저장하기 위해 재시작합니다.", Toast.LENGTH_LONG).show();
-        getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
-        finish();
+        new AlertDialog.Builder(this)
+                .setMessage("설정을 저장하기 위해 재시작합니다.")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
+                        Intent mStartActivity = new Intent(InitialActivity.this, LoginActivity.class);
+                        PendingIntent mPendingIntent = PendingIntent.getActivity(InitialActivity.this, 0, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+                        AlarmManager a = (AlarmManager) InitialActivity.this.getSystemService(Context.ALARM_SERVICE);
+                        Objects.requireNonNull(a).set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                        System.exit(0);
+                    }
+                }).show();
     }
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
