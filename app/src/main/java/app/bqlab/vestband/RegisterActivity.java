@@ -80,6 +80,9 @@ public class RegisterActivity extends AppCompatActivity {
                         }).show();
             }
         });
+
+
+        
         findViewById(R.id.register_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

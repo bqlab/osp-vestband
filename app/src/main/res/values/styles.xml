@@ -16,5 +16,14 @@
         <item name="colorPrimary">@color/colorNavy</item>
         <item name="colorPrimaryDark">@color/colorNavy</item>
         <item name="colorAccent">@color/colorBlue</item>
+        <item name="dialogTheme">@style/MyDialogTheme</item>
+    </style>
+
+    <style name="MyDialogTheme" parent="android:Theme.Material.Dialog">
+        <item name="android:datePickerStyle">@style/MyDatePicker</item>
+    </style>
+
+    <style name="MyDatePicker" parent="android:Widget.Material.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
     </style>
 </resources>
