@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //main_dashboard setting
-
         PieChart chart = findViewById(R.id.main_dashboard_chart);
         if (getSharedPreferences("time", MODE_PRIVATE).getInt("total", 0) != 0) {
             ArrayList<PieEntry> values = new ArrayList<>();
@@ -203,6 +202,18 @@ public class MainActivity extends AppCompatActivity {
             totalTimeText = String.valueOf((UserService.totalTime % 3600) / 60) + "분";
         ((TextView) findViewById(R.id.main_dashboard_total_content)).setText(totalTimeText);
         ((TextView) findViewById(R.id.main_analisys_vibrate_content)).setText(String.valueOf(UserService.badTime));
+        findViewById(R.id.main_dashboard_total).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(1);
+            }
+        });
+        findViewById(R.id.main_dashboard_vibrate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLayoutByIndex(1);
+            }
+        });
         findViewById(R.id.main_dashboard_analisys).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 getLayoutByIndex(2);
             }
         });
+
         //main_analisys setting -> analysis is correct expression
         if (UserService.rightTime > 3600)
             rightTimeText = String.valueOf(UserService.rightTime / 3600) + "시간 " + String.valueOf((UserService.rightTime % 3600) / 60) + "분";
