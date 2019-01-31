@@ -296,7 +296,19 @@ public class InitialActivity extends AppCompatActivity {
                                 if (!getIntent().getBooleanExtra("thirdProgress", false)) {
                                     startActivity(new Intent(InitialActivity.this, MainActivity.class));
                                 }
-                                finish();
+                                new AlertDialog.Builder(InitialActivity.this)
+                                        .setMessage("설정을 저장하기 위해 재시작합니다.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
+                                                Intent mStartActivity = new Intent(InitialActivity.this, LoginActivity.class);
+                                                PendingIntent mPendingIntent = PendingIntent.getActivity(InitialActivity.this, 0, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+                                                AlarmManager a = (AlarmManager) InitialActivity.this.getSystemService(Context.ALARM_SERVICE);
+                                                Objects.requireNonNull(a).set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                                                System.exit(0);
+                                            }
+                                        }).show();
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -307,19 +319,6 @@ public class InitialActivity extends AppCompatActivity {
                         }).show();
             }
         });
-        new AlertDialog.Builder(this)
-                .setMessage("설정을 저장하기 위해 재시작합니다.")
-                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("first", false).apply();
-                        Intent mStartActivity = new Intent(InitialActivity.this, LoginActivity.class);
-                        PendingIntent mPendingIntent = PendingIntent.getActivity(InitialActivity.this, 0, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-                        AlarmManager a = (AlarmManager) InitialActivity.this.getSystemService(Context.ALARM_SERVICE);
-                        Objects.requireNonNull(a).set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-                        System.exit(0);
-                    }
-                }).show();
     }
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {

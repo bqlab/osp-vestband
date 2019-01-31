@@ -60,8 +60,8 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.start_image).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(StartActivity.this, "개발자 모드 : " + Boolean.toString(mPreferences.getBoolean("developer", false)), Toast.LENGTH_LONG).show();
                 mPreferences.edit().putBoolean("developer", !mPreferences.getBoolean("developer", false)).apply();
+                Toast.makeText(StartActivity.this, "개발자 모드 : " + Boolean.toString(mPreferences.getBoolean("developer", false)), Toast.LENGTH_LONG).show();
                 return true;
             }
         });

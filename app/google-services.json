@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "348415017555",
+    "firebase_url": "https://mediandbacks-695e3.firebaseio.com",
+    "project_id": "mediandbacks-695e3",
+    "storage_bucket": "mediandbacks-695e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348415017555:android:af523d8379ea807d",
+        "android_client_info": {
+          "package_name": "app.bqlab.vestband"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348415017555-ubphdqs5lhjkqnb9qcdv6g81h2umc58r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPuYqYzsrkt5qclAn4H9MX__FtVT4VKnQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
